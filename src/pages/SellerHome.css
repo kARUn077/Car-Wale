@@ -1,0 +1,240 @@
+/* ===== SELLER HOME PAGE STYLES ===== */
+
+.seller-page {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+/* Top header bar */
+.seller-header {
+  background: white;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.seller-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+
+.seller-header p {
+  font-size: 14px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.add-car-btn {
+  background-color: #e03012;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 7px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-car-btn:hover {
+  background-color: #bf3313;
+}
+
+/* Stats bar */
+.seller-stats {
+  display: flex;
+  gap: 16px;
+  padding: 20px 30px;
+}
+
+.stat-box {
+  background: white;
+  border-radius: 8px;
+  padding: 16px 24px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  text-align: center;
+  min-width: 130px;
+}
+
+.stat-box .stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: #e03012;
+}
+
+.stat-box .stat-label {
+  font-size: 13px;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* Listings section */
+.seller-listings {
+  padding: 0 30px 40px;
+}
+
+.listings-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 18px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+/* Seller car cards */
+.seller-car-card {
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  gap: 0;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.seller-car-card:hover {
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+.seller-card-img {
+  width: 200px;
+  height: 140px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.seller-card-info {
+  flex: 1;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.seller-card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.seller-card-meta {
+  font-size: 13px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.seller-card-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: #e03012;
+  margin-top: 6px;
+}
+
+.seller-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-left: 1px solid #f0f2f5;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.delete-btn {
+  background: white;
+  border: 1.5px solid #e03012;
+  color: #e03012;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: center;
+}
+
+.delete-btn:hover {
+  background: #e03012;
+  color: white;
+}
+
+.edit-btn {
+  background: white;
+  border: 1.5px solid #0f3460;
+  color: #0f3460;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: center;
+}
+
+.edit-btn:hover {
+  background: #0f3460;
+  color: white;
+}
+
+/* Mobile adjustments */
+@media (max-width: 720px) {
+  .seller-header {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .seller-stats {
+    padding: 12px 16px;
+    gap: 10px;
+    overflow-x: auto;
+  }
+
+  .seller-car-card {
+    flex-direction: column;
+  }
+
+  .seller-card-img {
+    width: 100%;
+    height: 180px;
+  }
+
+  .seller-card-actions {
+    flex-direction: row;
+    border-left: none;
+    border-top: 1px solid #f0f2f5;
+    padding: 12px;
+    justify-content: space-between;
+  }
+
+  .delete-btn {
+    padding: 10px 14px;
+    width: 100%;
+    max-width: 160px;
+  }
+}
