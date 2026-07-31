@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Car = require('../models/Car');
 
 // Get user profile
 router.get('/:email', async (req, res) => {
@@ -36,6 +37,7 @@ router.post('/:email/wishlist', async (req, res) => {
     if (!user.wishlist.includes(carId)) {
       user.wishlist.push(carId);
       await user.save();
+      await Car.findByIdAndUpdate(carId, { $inc: { wishlistCount: 1 } });
     }
     
     res.json(user.wishlist);
@@ -49,8 +51,13 @@ router.delete('/:email/wishlist/:carId', async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email });
     
+    const prevLength = user.wishlist.length;
     user.wishlist = user.wishlist.filter(id => id.toString() !== req.params.carId);
-    await user.save();
+    
+    if (user.wishlist.length < prevLength) {
+      await user.save();
+      await Car.findByIdAndUpdate(req.params.carId, { $inc: { wishlistCount: -1 } });
+    }
     
     res.json(user.wishlist);
   } catch (err) {

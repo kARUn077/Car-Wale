@@ -43,10 +43,26 @@ const carSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  seller: {
+    type: String,
+    required: true
+  },
+  phone: {
+    type: String,
+    required: true
+  },
   status: {
     type: String,
     enum: ['active', 'sold'],
     default: 'active'
+  },
+  views: {
+    type: Number,
+    default: 0
+  },
+  wishlistCount: {
+    type: Number,
+    default: 0
   }
 }, { timestamps: true });
 

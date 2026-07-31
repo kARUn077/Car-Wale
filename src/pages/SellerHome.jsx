@@ -200,7 +200,7 @@ const lowestPrice = useMemo(() => {
     <FaHeart className="stat-icon" />
 
     <p className="stat-number">
-      {cars.length * 8}
+      {cars.reduce((sum, car) => sum + (car.wishlistCount || 0), 0)}
     </p>
 
     <p className="stat-label">
@@ -214,7 +214,7 @@ const lowestPrice = useMemo(() => {
     <FaEye className="stat-icon" />
 
     <p className="stat-number">
-      {cars.length * 72}
+      {cars.reduce((sum, car) => sum + (car.views || 0), 0)}
     </p>
 
     <p className="stat-label">

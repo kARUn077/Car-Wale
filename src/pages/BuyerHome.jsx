@@ -177,7 +177,7 @@ function BuyerHome() {
   }
 
   // ── Compare cars data ──────────────────────────────────────
-  const compareCars = allCars.filter(c => compareIds.includes(String(c.id)))
+  const compareCars = allCars.filter(c => compareIds.includes(String(c._id)))
 
   return (
     <div className="buyer-page">
