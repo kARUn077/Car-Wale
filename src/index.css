@@ -1,4 +1,43 @@
-/* ===== GLOBAL STYLES ===== */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+/* ===== GLOBAL STYLES & LIGHT MODE VARIABLES ===== */
+:root {
+  --primary-color: #e03012;
+  --primary-hover: #bf3313;
+  --bg-color: #f8fafc;
+  --text-dark: #0f172a;
+  --text-light: #64748b;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  
+  /* Glassmorphism & UI tokens */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-glow: 0 0 20px rgba(224, 48, 18, 0.15);
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== DARK MODE VARIABLES ===== */
+[data-theme='dark'] {
+  --primary-color: #ff4d30;
+  --primary-hover: #ff6b54;
+  --bg-color: #0f172a;
+  --text-dark: #f8fafc;
+  --text-light: #94a3b8;
+  --card-bg: #1e293b;
+  --border-color: #334155;
+  
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5);
+}
 
 * {
   margin: 0;
@@ -7,9 +46,12 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f2f5;
-  color: #333;
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 a {
@@ -21,8 +63,14 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  font-family: 'Outfit', sans-serif;
+  color: inherit;
+  transition: var(--transition);
 }
 
-input {
+input, textarea, select {
   outline: none;
+  font-family: 'Outfit', sans-serif;
+  color: inherit;
+  transition: var(--transition);
 }

@@ -7,29 +7,48 @@ import SellerAddCar from './pages/SellerAddCar'
 import SellerEditCar from './pages/SellerEditCar'
 import CarDetail from './pages/CarDetail'
 import Wishlist from './pages/Wishlist'
+import ProtectedRoute from './components/ProtectedRoute'
+import NotFound from './pages/NotFound'
+import Profile from './pages/Profile'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default route -> go to login */}
         <Route path="/" element={<Navigate to="/login" />} />
 
-        {/* Auth routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Buyer routes */}
-        <Route path="/buyer-home" element={<BuyerHome />} />
-        <Route path="/wishlist" element={<Wishlist />} />
+        <Route path="/buyer-home" element={
+          <ProtectedRoute allowedRole="buyer"><BuyerHome /></ProtectedRoute>
+        } />
+        <Route path="/wishlist" element={
+          <ProtectedRoute allowedRole="buyer"><Wishlist /></ProtectedRoute>
+        } />
 
-        {/* Seller routes */}
-        <Route path="/seller-home" element={<SellerHome />} />
-        <Route path="/seller-add-car" element={<SellerAddCar />} />
-        <Route path="/seller-edit-car/:id" element={<SellerEditCar />} />
+        <Route path="/seller-home" element={
+          <ProtectedRoute allowedRole="seller"><SellerHome /></ProtectedRoute>
+        } />
+        <Route path="/seller-add-car" element={
+          <ProtectedRoute allowedRole="seller"><SellerAddCar /></ProtectedRoute>
+        } />
+        <Route path="/seller-edit-car/:id" element={
+          <ProtectedRoute allowedRole="seller"><SellerEditCar /></ProtectedRoute>
+        } />
 
-        {/* Car detail page */}
-        <Route path="/car/:id" element={<CarDetail />} />
+        {/* Car detail — accessible to any logged-in user */}
+        <Route path="/car/:id" element={
+          <ProtectedRoute><CarDetail /></ProtectedRoute>
+        } />
+
+        {/* Profile — accessible to any logged-in user */}
+        <Route path="/profile" element={
+          <ProtectedRoute><Profile /></ProtectedRoute>
+        } />
+
+        {/* Catch-all 404 */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   )

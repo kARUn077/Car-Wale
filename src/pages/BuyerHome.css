@@ -6,7 +6,7 @@
 
 .buyer-page {
   min-height: 100vh;
-  background: #f0f2f7;
+  background-color: var(--bg-color);
   font-family: 'Inter', sans-serif;
 }
 
@@ -87,7 +87,7 @@
 .search-bar {
   display: flex;
   align-items: center;
-  background: white;
+  background: var(--card-bg);
   border-radius: 50px;
   padding: 6px 6px 6px 20px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.35);
@@ -106,8 +106,7 @@
   border: none;
   outline: none;
   font-size: 15px;
-  color: #1a1a2e;
-  font-family: 'Inter', sans-serif;
+  color: var(--text-dark);
   background: transparent;
 }
 
@@ -137,7 +136,6 @@
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
-  font-family: 'Inter', sans-serif;
 }
 
 .search-btn:hover {
@@ -163,7 +161,6 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
 }
 
 .budget-chip:hover {
@@ -224,9 +221,10 @@
    FILTER BAR
 ────────────────────────────────────────── */
 .filter-bar {
-  background: white;
-  border-bottom: 1px solid #e8eaed;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 60px;
   z-index: 90;
@@ -251,7 +249,7 @@
 .filter-group label {
   font-size: 11px;
   font-weight: 700;
-  color: #888;
+  color: var(--text-light);
   text-transform: uppercase;
   letter-spacing: 0.6px;
 }
@@ -259,15 +257,14 @@
 .filter-group select,
 .filter-group input[type="number"] {
   padding: 8px 12px;
-  border: 1.5px solid #e4e6ea;
+  border: 1.5px solid var(--border-color);
   border-radius: 8px;
   font-size: 13px;
-  color: #1a1a2e;
-  background: #f8f9fb;
+  color: var(--text-dark);
+  background: var(--bg-color);
   cursor: pointer;
   outline: none;
   min-width: 130px;
-  font-family: 'Inter', sans-serif;
   transition: border 0.2s, box-shadow 0.2s;
 }
 
@@ -280,16 +277,15 @@
 
 .reset-btn {
   padding: 8px 18px;
-  background: white;
-  border: 1.5px solid #e03012;
-  color: #e03012;
+  background: transparent;
+  border: 1.5px solid var(--primary-color);
+  color: var(--primary-color);
   border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
   align-self: flex-end;
-  font-family: 'Inter', sans-serif;
 }
 
 .reset-btn:hover {
@@ -318,12 +314,12 @@
 .results-count {
   font-size: 22px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-dark);
 }
 
 .results-label {
   font-size: 14px;
-  color: #888;
+  color: var(--text-light);
   font-weight: 500;
 }
 
@@ -349,7 +345,6 @@
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
 }
 
 .wishlist-link:hover {
@@ -367,11 +362,10 @@
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
 }
 
 .compare-trigger-btn:hover {
-  transform: scale(1.04);
+  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(15,52,96,0.4);
 }
 
@@ -391,18 +385,18 @@
    CAR CARD
 ────────────────────────────────────────── */
 .car-card {
-  background: white;
-  border-radius: 16px;
+  background: var(--card-bg);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
-  transition: transform 0.25s, box-shadow 0.25s;
-  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
 }
 
 .car-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.14);
+  transform: scale(1.01);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
 }
 
 .car-card-compared {
@@ -416,7 +410,7 @@
   width: 100%;
   height: 195px;
   overflow: hidden;
-  background: #f0f2f5;
+  background: var(--bg-color);
 }
 
 .card-img-box img {
@@ -474,8 +468,8 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(255,255,255,0.92);
-  border: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -484,7 +478,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  box-shadow: var(--shadow-sm);
   transition: transform 0.2s, background 0.2s;
   z-index: 2;
   backdrop-filter: blur(4px);
@@ -498,9 +492,9 @@
   position: absolute;
   bottom: 10px;
   right: 10px;
-  background: rgba(255,255,255,0.92);
-  border: 1.5px solid rgba(15,52,96,0.3);
-  color: #0f3460;
+  background: var(--glass-bg);
+  border: 1.5px solid var(--text-light);
+  color: var(--text-dark);
   border-radius: 20px;
   padding: 4px 12px;
   font-size: 11px;
@@ -508,7 +502,6 @@
   cursor: pointer;
   transition: all 0.2s;
   backdrop-filter: blur(4px);
-  font-family: 'Inter', sans-serif;
 }
 
 .compare-btn:hover {
@@ -529,9 +522,9 @@
 }
 
 .card-title {
-  font-size: 17px;
-  font-weight: 800;
-  color: #1a1a2e;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-dark);
   margin-bottom: 8px;
   letter-spacing: -0.3px;
 }
@@ -546,7 +539,7 @@
 
 .spec-item {
   font-size: 12px;
-  color: #666;
+  color: var(--text-light);
   font-weight: 500;
 }
 
@@ -557,7 +550,7 @@
 
 .card-location {
   font-size: 13px;
-  color: #999;
+  color: var(--text-light);
   margin-bottom: 14px;
   display: flex;
   align-items: center;
@@ -569,7 +562,7 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 12px;
-  border-top: 1px solid #f0f2f5;
+  border-top: 1px solid var(--border-color);
 }
 
 .card-price {
@@ -580,16 +573,15 @@
 }
 
 .view-btn {
-  background: #f0f2f7;
-  border: none;
-  color: #1a1a2e;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-dark);
   font-size: 13px;
   font-weight: 700;
   padding: 7px 16px;
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
 }
 
 .view-btn:hover {
@@ -614,13 +606,13 @@
 .no-results h3 {
   font-size: 22px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-dark);
   margin-bottom: 8px;
 }
 
 .no-results p {
   font-size: 14px;
-  color: #888;
+  color: var(--text-light);
   margin-bottom: 24px;
 }
 
@@ -634,7 +626,6 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s;
-  font-family: 'Inter', sans-serif;
 }
 
 .reset-btn-lg:hover {
@@ -661,14 +652,15 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .compare-modal {
-  background: white;
+  background: var(--card-bg);
   border-radius: 20px;
   width: 100%;
   max-width: 780px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+  box-shadow: var(--shadow-lg);
   animation: slideUp 0.3s ease;
+  border: 1px solid var(--glass-border);
 }
 
 @keyframes slideUp {
@@ -681,17 +673,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 22px 28px 18px;
-  border-bottom: 1px solid #f0f2f5;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .compare-modal-header h2 {
   font-size: 20px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-dark);
 }
 
 .compare-close {
-  background: #f0f2f5;
+  background: var(--bg-color);
+  color: var(--text-dark);
   border: none;
   width: 34px;
   height: 34px;
@@ -704,18 +697,18 @@
   justify-content: center;
 }
 
-.compare-close:hover { background: #e4e6ea; }
+.compare-close:hover { background: #e2e8f0; }
 
 .compare-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0;
   padding: 24px 28px;
   gap: 24px;
 }
 
 .compare-car-col {
-  background: #f8f9fb;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
   border-radius: 14px;
   padding: 20px;
   text-align: center;
@@ -732,7 +725,7 @@
 .compare-car-col h3 {
   font-size: 16px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-dark);
   margin-bottom: 14px;
 }
 
@@ -761,7 +754,7 @@
   padding: 8px 0;
   font-size: 13px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-dark);
 }
 
 .view-detail-btn {
@@ -786,7 +779,7 @@
 .compare-modal-footer {
   padding: 16px 28px 24px;
   text-align: center;
-  border-top: 1px solid #f0f2f5;
+  border-top: 1px solid var(--border-color);
 }
 
 .clear-compare-btn {

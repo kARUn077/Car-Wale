@@ -24,7 +24,7 @@ function Login() {
 
     // Check against saved users in localStorage
     const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const user = users.find(u => u.email === email)
+    const user = users.find(u => u.email === email);
     if (!user) {
       setError('No account found with this email. Please sign up.')
       return

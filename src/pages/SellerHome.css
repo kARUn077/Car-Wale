@@ -2,217 +2,315 @@
 
 .seller-page {
   min-height: 100vh;
-  background-color: #f0f2f5;
+  background-color: var(--bg-color);
+  padding-bottom: 40px;
 }
 
-/* Top header bar */
-.seller-header {
-  background: white;
-  padding: 20px 30px;
+/* Dashboard Banner */
+.dashboard-banner {
+  margin: 30px;
+  padding: 40px;
+  background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+  border-radius: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #e0e0e0;
+  color: white;
+  box-shadow: 0 10px 30px rgba(15, 52, 96, 0.2);
+  position: relative;
+  overflow: hidden;
 }
 
-.seller-header h2 {
-  font-size: 22px;
-  font-weight: 800;
-  color: #1a1a2e;
+/* Glassmorphism pattern overlay */
+.dashboard-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(224, 48, 18, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: 1;
 }
 
-.seller-header p {
-  font-size: 14px;
-  color: #888;
-  margin-top: 3px;
+.banner-left {
+  z-index: 2;
+  max-width: 600px;
+}
+
+.banner-left h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.banner-left h1 span {
+  color: #e03012;
+}
+
+.banner-left p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
 .add-car-btn {
   background-color: #e03012;
   color: white;
   border: none;
-  padding: 10px 22px;
-  border-radius: 7px;
-  font-size: 15px;
-  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(224, 48, 18, 0.3);
 }
 
 .add-car-btn:hover {
   background-color: #bf3313;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(224, 48, 18, 0.4);
+}
+
+.banner-right {
+  z-index: 2;
+}
+
+.banner-car-icon {
+  font-size: 120px;
+  color: rgba(255, 255, 255, 0.1);
+  transform: rotate(-10deg);
 }
 
 /* Stats bar */
 .seller-stats {
-  display: flex;
-  gap: 16px;
-  padding: 20px 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 0 30px;
+  margin-bottom: 40px;
 }
 
 .stat-box {
-  background: white;
-  border-radius: 8px;
-  padding: 16px 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
   text-align: center;
-  min-width: 130px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
+}
+
+.stat-icon {
+  font-size: 32px;
+  color: #e03012;
+  margin-bottom: 12px;
+  opacity: 0.9;
 }
 
 .stat-box .stat-number {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
-  color: #e03012;
+  color: var(--text-dark);
+  margin-bottom: 4px;
 }
 
 .stat-box .stat-label {
-  font-size: 13px;
-  color: #888;
-  margin-top: 2px;
+  font-size: 14px;
+  color: var(--text-light);
+  font-weight: 500;
 }
 
 /* Listings section */
 .seller-listings {
-  padding: 0 30px 40px;
+  padding: 0 30px;
 }
 
 .listings-title {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
-  color: #1a1a2e;
-  margin-bottom: 16px;
+  color: var(--text-dark);
+  margin-bottom: 24px;
 }
 
+/* Empty State */
 .empty-state {
   text-align: center;
-  padding: 60px 20px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 80px 20px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px dashed var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .empty-icon {
-  font-size: 56px;
-  margin-bottom: 16px;
+  font-size: 72px;
+  margin-bottom: 24px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
 .empty-state p {
-  font-size: 18px;
-  color: #888;
-  margin-bottom: 16px;
+  font-size: 20px;
+  color: var(--text-light);
+  margin-bottom: 24px;
+  font-weight: 500;
 }
 
 /* Seller car cards */
 .seller-car-card {
-  background: white;
-  border-radius: 10px;
+  background: var(--card-bg);
+  border-radius: 12px;
   display: flex;
   gap: 0;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
-  transition: box-shadow 0.2s;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
 }
 
 .seller-car-card:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-md);
+  transform: scale(1.01);
 }
 
 .seller-card-img {
-  width: 200px;
-  height: 140px;
+  width: 260px;
+  height: 180px;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .seller-card-info {
   flex: 1;
-  padding: 16px 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .seller-card-title {
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-dark);
+  margin-bottom: 8px;
 }
 
 .seller-card-meta {
-  font-size: 13px;
-  color: #888;
-  margin-top: 4px;
+  font-size: 14px;
+  color: var(--text-light);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .seller-card-price {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 800;
   color: #e03012;
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .seller-card-actions {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 20px;
-  border-left: 1px solid #f0f2f5;
   flex-direction: column;
   justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  background-color: var(--bg-color);
+  border-left: 1px solid var(--border-color);
+  min-width: 160px;
 }
 
-.delete-btn {
-  background: white;
-  border: 1.5px solid #e03012;
-  color: #e03012;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 700;
+.edit-btn, .delete-btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   width: 100%;
-  text-align: center;
-}
-
-.delete-btn:hover {
-  background: #e03012;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .edit-btn {
-  background: white;
-  border: 1.5px solid #0f3460;
-  color: #0f3460;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s;
-  width: 100%;
-  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
 }
 
 .edit-btn:hover {
-  background: #0f3460;
+  background: var(--primary-color);
+  color: white;
+}
+
+.delete-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--primary-hover);
+  color: var(--primary-hover);
+}
+
+.delete-btn:hover {
+  background: var(--primary-hover);
   color: white;
 }
 
 /* Mobile adjustments */
-@media (max-width: 720px) {
-  .seller-header {
-    padding: 14px 16px;
+@media (max-width: 768px) {
+  .dashboard-banner {
+    margin: 16px;
+    padding: 24px;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    text-align: center;
+  }
+  
+  .banner-left h1 {
+    font-size: 24px;
+  }
+
+  .banner-right {
+    display: none;
+  }
+  
+  .add-car-btn {
+    margin: 0 auto;
   }
 
   .seller-stats {
-    padding: 12px 16px;
-    gap: 10px;
-    overflow-x: auto;
+    padding: 0 16px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .seller-listings {
+    padding: 0 16px;
   }
 
   .seller-car-card {
@@ -221,20 +319,13 @@
 
   .seller-card-img {
     width: 100%;
-    height: 180px;
+    height: 200px;
   }
 
   .seller-card-actions {
     flex-direction: row;
     border-left: none;
-    border-top: 1px solid #f0f2f5;
-    padding: 12px;
-    justify-content: space-between;
-  }
-
-  .delete-btn {
-    padding: 10px 14px;
-    width: 100%;
-    max-width: 160px;
+    border-top: 1px solid var(--border-color);
+    padding: 16px;
   }
 }

@@ -1,14 +1,38 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import Navbar from '../components/Navbar'
-import Toast from '../components/Toast'
-import './SellerHome.css'
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import Toast from "../components/Toast";
+import "./SellerHome.css";
+
+import {
+  FaCar,
+  FaPlus,
+  FaTrash,
+  FaEdit,
+  FaHeart,
+  FaMoneyBillWave,
+  FaMapMarkerAlt,
+  FaGasPump,
+  FaCalendarAlt,
+  FaTachometerAlt,
+  FaCogs,
+  FaEye
+} from "react-icons/fa";
 
 function SellerHome() {
   const navigate = useNavigate()
   const location = useLocation()
   const sellerEmail = localStorage.getItem('userEmail') || ''
   const sellerName = localStorage.getItem('userName') || 'Seller'
+
+  const [greeting, setGreeting] = useState('Welcome Back')
+
+  useEffect(() => {
+    const hour = new Date().getHours()
+    if (hour < 12) setGreeting('Good Morning')
+    else if (hour < 18) setGreeting('Good Afternoon')
+    else setGreeting('Good Evening')
+  }, [])
 
   // Toast state
   const [toast, setToast] = useState(null)
@@ -19,6 +43,28 @@ function SellerHome() {
     const all = saved ? JSON.parse(saved) : []
     return all.filter(c => c.sellerEmail === sellerEmail)
   })
+
+
+  //
+  const totalValue = useMemo(() => {
+  return cars.reduce((sum, car) => sum + Number(car.price), 0);
+}, [cars]);
+
+const averagePrice = useMemo(() => {
+  if (cars.length === 0) return 0;
+  return Math.round(totalValue / cars.length);
+}, [cars, totalValue]);
+
+const highestPrice = useMemo(() => {
+  if (cars.length === 0) return 0;
+  return Math.max(...cars.map(car => Number(car.price)));
+}, [cars]);
+
+const lowestPrice = useMemo(() => {
+  if (cars.length === 0) return 0;
+  return Math.min(...cars.map(car => Number(car.price)));
+}, [cars]);
+
 
   // Show toast if navigated here with a success message
   useEffect(() => {
@@ -65,40 +111,101 @@ function SellerHome() {
         />
       )}
 
-      {/* Header */}
-      <div className="seller-header">
-        <div>
-          <h2>Seller Dashboard</h2>
-          <p>Welcome back, <strong>{sellerName}</strong>! Manage your car listings here.</p>
-        </div>
-        <button className="add-car-btn" onClick={() => navigate('/seller-add-car')}>
-          + Add New Car
-        </button>
-      </div>
+     
 
-      {/* Stats */}
+      <section className="dashboard-banner">
+
+  <div className="banner-left">
+
+    <h1>
+      {greeting},
+      <span> {sellerName}</span>
+    </h1>
+
+    <p>
+      Manage all your listings,
+      update prices,
+      edit information
+      and reach thousands of buyers every day.
+    </p>
+
+    <button
+      className="add-car-btn"
+      onClick={() => navigate("/seller-add-car")}
+    >
+      <FaPlus />
+      <span>Add New Car</span>
+    </button>
+
+  </div>
+
+  <div className="banner-right">
+
+    <FaCar className="banner-car-icon" />
+
+  </div>
+
+</section>
+
       <div className="seller-stats">
-        <div className="stat-box">
-          <p className="stat-number">{cars.length}</p>
-          <p className="stat-label">Cars Listed</p>
-        </div>
-        <div className="stat-box">
-          <p className="stat-number">
-            {cars.length > 0
-              ? formatPrice(Math.min(...cars.map(c => Number(c.price))))
-              : '—'}
-          </p>
-          <p className="stat-label">Lowest Price</p>
-        </div>
-        <div className="stat-box">
-          <p className="stat-number">
-            {cars.length > 0
-              ? formatPrice(Math.max(...cars.map(c => Number(c.price))))
-              : '—'}
-          </p>
-          <p className="stat-label">Highest Price</p>
-        </div>
-      </div>
+
+  <div className="stat-box">
+
+    <FaCar className="stat-icon" />
+
+    <p className="stat-number">
+      {cars.length}
+    </p>
+
+    <p className="stat-label">
+      Total Listings
+    </p>
+
+  </div>
+
+  <div className="stat-box">
+
+    <FaMoneyBillWave className="stat-icon" />
+
+    <p className="stat-number">
+      {formatPrice(totalValue)}
+    </p>
+
+    <p className="stat-label">
+      Portfolio Value
+    </p>
+
+  </div>
+
+  <div className="stat-box">
+
+    <FaHeart className="stat-icon" />
+
+    <p className="stat-number">
+      {cars.length * 8}
+    </p>
+
+    <p className="stat-label">
+      Saved by Buyers
+    </p>
+
+  </div>
+
+  <div className="stat-box">
+
+    <FaEye className="stat-icon" />
+
+    <p className="stat-number">
+      {cars.length * 72}
+    </p>
+
+    <p className="stat-label">
+      Total Views
+    </p>
+
+  </div>
+
+</div>
 
       {/* Listings */}
       <div className="seller-listings">
