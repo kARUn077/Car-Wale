@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { API_URL } from '../api'
 import './Profile.css'
 
 function Profile() {
@@ -16,15 +17,44 @@ function Profile() {
   const [newPassword, setNewPassword] = useState('')
   const [passwordMsg, setPasswordMsg] = useState('')
 
-  // Load user data
+  // Stats
+  const [myCars, setMyCars] = useState([])
+  const [wishlistCount, setWishlistCount] = useState(0)
+
+  // Load user data from API
   useEffect(() => {
-    const userName = localStorage.getItem('userName') || ''
-    const userPhone = localStorage.getItem('userPhone') || ''
-    const userCity = localStorage.getItem('userCity') || ''
-    setName(userName)
-    setPhone(userPhone)
-    setCity(userCity)
-  }, [])
+    async function fetchProfile() {
+      try {
+        const res = await fetch(`${API_URL}/users/${email}`)
+        if (res.ok) {
+          const user = await res.json()
+          setName(user.name || '')
+          setPhone(user.phone || '')
+          setCity(user.city || '')
+          localStorage.setItem('userName', user.name || '')
+          setWishlistCount(user.wishlist ? user.wishlist.length : 0)
+        }
+      } catch (err) {
+        console.error('Failed to fetch profile:', err)
+      }
+    }
+
+    async function fetchSellerCars() {
+      if (role !== 'seller') return
+      try {
+        const res = await fetch(`${API_URL}/cars/seller/${email}`)
+        if (res.ok) {
+          const data = await res.json()
+          setMyCars(data)
+        }
+      } catch (err) {
+        console.error('Failed to fetch seller cars:', err)
+      }
+    }
+
+    fetchProfile()
+    fetchSellerCars()
+  }, [email, role])
 
   // Get initials for avatar
   function getInitials(fullName) {
@@ -35,28 +65,26 @@ function Profile() {
   }
 
   // Save profile info
-  function handleSaveProfile(e) {
+  async function handleSaveProfile(e) {
     e.preventDefault()
-    localStorage.setItem('userName', name)
-    localStorage.setItem('userPhone', phone)
-    localStorage.setItem('userCity', city)
-
-    // Also update in the users array
-    const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const idx = users.findIndex(u => u.email === email)
-    if (idx !== -1) {
-      users[idx].name = name
-      users[idx].phone = phone
-      users[idx].city = city
-      localStorage.setItem('users', JSON.stringify(users))
+    try {
+      const res = await fetch(`${API_URL}/users/${email}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, city })
+      })
+      if (res.ok) {
+        localStorage.setItem('userName', name)
+        setSaved(true)
+        setTimeout(() => setSaved(false), 2500)
+      }
+    } catch (err) {
+      console.error('Failed to save profile:', err)
     }
-
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2500)
   }
 
   // Change password
-  function handleChangePassword(e) {
+  async function handleChangePassword(e) {
     e.preventDefault()
     setPasswordMsg('')
 
@@ -69,22 +97,36 @@ function Profile() {
       return
     }
 
-    const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const idx = users.findIndex(u => u.email === email)
-    if (idx === -1) {
-      setPasswordMsg('User not found.')
-      return
-    }
-    if (users[idx].password !== currentPassword) {
-      setPasswordMsg('Current password is incorrect.')
-      return
-    }
+    try {
+      // First verify the current password by trying to login
+      const loginRes = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: currentPassword, role })
+      })
 
-    users[idx].password = newPassword
-    localStorage.setItem('users', JSON.stringify(users))
-    setCurrentPassword('')
-    setNewPassword('')
-    setPasswordMsg('✅ Password changed successfully!')
+      if (!loginRes.ok) {
+        setPasswordMsg('Current password is incorrect.')
+        return
+      }
+
+      // Update password
+      const updateRes = await fetch(`${API_URL}/users/${email}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: newPassword })
+      })
+
+      if (updateRes.ok) {
+        setCurrentPassword('')
+        setNewPassword('')
+        setPasswordMsg('✅ Password changed successfully!')
+      } else {
+        setPasswordMsg('Failed to update password.')
+      }
+    } catch (err) {
+      setPasswordMsg('Server error.')
+    }
   }
 
   function handleLogout() {
@@ -93,16 +135,6 @@ function Profile() {
     localStorage.removeItem('userName')
     navigate('/login')
   }
-
-  // Stats for seller
-  const myCars = role === 'seller'
-    ? JSON.parse(localStorage.getItem('sellerCars') || '[]').filter(c => c.sellerEmail === email)
-    : []
-
-  // Wishlist count for buyer
-  const wishlist = role === 'buyer'
-    ? JSON.parse(localStorage.getItem('wishlist') || '[]')
-    : []
 
   return (
     <div className="profile-page">
@@ -147,7 +179,7 @@ function Profile() {
               ) : (
                 <>
                   <div className="stat-item">
-                    <span className="stat-number">{wishlist.length}</span>
+                    <span className="stat-number">{wishlistCount}</span>
                     <span className="stat-label">Wishlist</span>
                   </div>
                   <div className="stat-item">

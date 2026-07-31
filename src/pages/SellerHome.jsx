@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Toast from "../components/Toast";
+import { API_URL } from "../api";
 import "./SellerHome.css";
 
 import {
@@ -38,11 +39,23 @@ function SellerHome() {
   const [toast, setToast] = useState(null)
 
   // Load only THIS seller's cars
-  const [cars, setCars] = useState(() => {
-    const saved = localStorage.getItem('sellerCars')
-    const all = saved ? JSON.parse(saved) : []
-    return all.filter(c => c.sellerEmail === sellerEmail)
-  })
+  const [cars, setCars] = useState([]);
+
+  useEffect(() => {
+    async function fetchSellerCars() {
+      if (!sellerEmail) return;
+      try {
+        const res = await fetch(`${API_URL}/cars/seller/${sellerEmail}`);
+        if (res.ok) {
+          const data = await res.json();
+          setCars(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch seller cars:", err);
+      }
+    }
+    fetchSellerCars();
+  }, [sellerEmail]);
 
 
   //
@@ -84,18 +97,23 @@ const lowestPrice = useMemo(() => {
   }
 
   // Delete a car
-  function handleDelete(carId) {
+  async function handleDelete(carId) {
     const confirmed = window.confirm('Are you sure you want to delete this listing?')
     if (!confirmed) return
 
-    // Remove from localStorage (all sellers' cars)
-    const all = JSON.parse(localStorage.getItem('sellerCars') || '[]')
-    const updated = all.filter(c => c.id !== carId)
-    localStorage.setItem('sellerCars', JSON.stringify(updated))
-
-    // Update UI state
-    setCars(prev => prev.filter(c => c.id !== carId))
-    setToast({ message: 'Car listing deleted.', type: 'error' })
+    try {
+      const res = await fetch(`${API_URL}/cars/${carId}`, {
+        method: 'DELETE'
+      })
+      if (res.ok) {
+        setCars(prev => prev.filter(c => c._id !== carId))
+        setToast({ message: 'Car listing deleted.', type: 'error' })
+      } else {
+        setToast({ message: 'Failed to delete car.', type: 'error' })
+      }
+    } catch (err) {
+      setToast({ message: 'Server error.', type: 'error' })
+    }
   }
 
   return (
@@ -221,7 +239,7 @@ const lowestPrice = useMemo(() => {
           </div>
         ) : (
           cars.map(car => (
-            <div key={car.id} className="seller-car-card">
+            <div key={car._id} className="seller-car-card">
               {/* Car Image */}
               <img
                 src={car.image || 'https://via.placeholder.com/200x140?text=No+Image'}
@@ -247,13 +265,13 @@ const lowestPrice = useMemo(() => {
               <div className="seller-card-actions">
                 <button
                   className="edit-btn"
-                  onClick={() => navigate(`/seller-edit-car/${car.id}`)}
+                  onClick={() => navigate(`/seller-edit-car/${car._id}`)}
                 >
                   ✏️ Edit
                 </button>
                 <button
                   className="delete-btn"
-                  onClick={() => handleDelete(car.id)}
+                  onClick={() => handleDelete(car._id)}
                 >
                   🗑 Delete
                 </button>

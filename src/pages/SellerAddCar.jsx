@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { API_URL } from '../api'
 import './SellerAddCar.css'
 
 function SellerAddCar() {
@@ -55,7 +56,7 @@ function SellerAddCar() {
     return errs
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     const v = validate()
     if (Object.keys(v).length) {
@@ -65,15 +66,25 @@ function SellerAddCar() {
 
     const newCar = {
       ...form,
-      id: Date.now().toString(),
-      sellerEmail, // tag with seller's email for isolation
+      sellerEmail,
     }
-    const saved = localStorage.getItem('sellerCars')
-    const arr = saved ? JSON.parse(saved) : []
-    arr.push(newCar)
-    localStorage.setItem('sellerCars', JSON.stringify(arr))
 
-    navigate('/seller-home', { state: { toast: 'Car listed successfully! 🎉' } })
+    try {
+      const res = await fetch(`${API_URL}/cars`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCar)
+      })
+
+      if (res.ok) {
+        navigate('/seller-home', { state: { toast: 'Car listed successfully! 🎉' } })
+      } else {
+        const errData = await res.json()
+        setErrors({ server: errData.error || 'Failed to add car' })
+      }
+    } catch (err) {
+      setErrors({ server: 'Server error. Make sure backend is running.' })
+    }
   }
 
   return (
@@ -87,7 +98,7 @@ function SellerAddCar() {
         </div>
 
         <form className="add-car-form" onSubmit={handleSubmit}>
-
+          {errors.server && <div className="error" style={{marginBottom: '1rem'}}>⚠ {errors.server}</div>}
           {/* Brand + Model */}
           <div className="form-row">
             <div className="form-group">

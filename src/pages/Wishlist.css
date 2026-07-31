@@ -2,7 +2,7 @@
 
 .wishlist-page {
   min-height: 100vh;
-  background: #f5f6fa;
+  background-color: var(--bg-color);
 }
 
 .wishlist-container {
@@ -18,13 +18,13 @@
 .wishlist-header h2 {
   font-size: 28px;
   font-weight: 800;
-  color: #1a1a2e;
+  color: var(--text-dark);
   margin-bottom: 4px;
 }
 
 .wishlist-header p {
   font-size: 14px;
-  color: #888;
+  color: var(--text-light);
 }
 
 /* Empty State */
@@ -35,6 +35,9 @@
   justify-content: center;
   padding: 80px 20px;
   text-align: center;
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px dashed var(--border-color);
 }
 
 .wishlist-empty .empty-icon {
@@ -45,19 +48,19 @@
 .wishlist-empty h3 {
   font-size: 22px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-dark);
   margin-bottom: 8px;
 }
 
 .wishlist-empty p {
   font-size: 14px;
-  color: #888;
+  color: var(--text-light);
   margin-bottom: 24px;
 }
 
 .browse-btn {
   padding: 12px 28px;
-  background: linear-gradient(135deg, #e03012, #bf2a0f);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
   color: white;
   font-size: 15px;
   font-weight: 700;
@@ -69,7 +72,7 @@
 
 .browse-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(224,48,18,0.35);
+  box-shadow: var(--shadow-glow);
 }
 
 /* Grid */
@@ -81,24 +84,26 @@
 
 /* Card */
 .wishlist-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
+  border: 1px solid var(--border-color);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .wishlist-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-color);
 }
 
 .wishlist-card-img-box {
   position: relative;
   height: 180px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--bg-color);
 }
 
 .wishlist-card-img-box img {
@@ -116,8 +121,9 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background: white;
-  border: none;
+  background: var(--card-bg);
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -126,12 +132,14 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  transition: transform 0.2s;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
 }
 
 .remove-wish-btn:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
+  color: #e03012;
+  border-color: #e03012;
 }
 
 /* Card Info */
@@ -142,19 +150,19 @@
 .wishlist-card-info h3 {
   font-size: 16px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--text-dark);
   margin-bottom: 6px;
 }
 
 .wc-meta {
   font-size: 13px;
-  color: #777;
+  color: var(--text-light);
   margin-bottom: 4px;
 }
 
 .wc-location {
   font-size: 13px;
-  color: #777;
+  color: var(--text-light);
   margin-bottom: 12px;
 }
 
@@ -167,13 +175,14 @@
 .wc-price {
   font-size: 17px;
   font-weight: 800;
-  color: #e03012;
+  color: var(--primary-color);
 }
 
 .wc-transmission {
   font-size: 12px;
-  background: #f5f6fa;
-  color: #555;
+  background: var(--bg-color);
+  color: var(--text-light);
+  border: 1px solid var(--border-color);
   padding: 4px 10px;
   border-radius: 20px;
   font-weight: 600;

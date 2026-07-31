@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '../components/Navbar'
-import dummyCars from '../data/carsData'
+import { API_URL } from '../api'
 import './CarDetail.css'
 
 function CarDetail() {
@@ -11,12 +11,37 @@ function CarDetail() {
   const [activeImgIdx, setActiveImgIdx] = useState(0)
   const [showContactModal, setShowContactModal] = useState(false)
 
-  // Load seller-added cars from localStorage too
-  const sellerCars = JSON.parse(localStorage.getItem('sellerCars') || '[]')
-  const allCars = [...dummyCars, ...sellerCars]
+  const [car, setCar] = useState(null)
+  const [loading, setLoading] = useState(true)
 
-  // Find the car by id
-  const car = allCars.find(c => String(c.id) === String(id))
+  useEffect(() => {
+    async function fetchCar() {
+      try {
+        const res = await fetch(`${API_URL}/cars/${id}`)
+        if (res.ok) {
+          const data = await res.json()
+          setCar(data)
+        }
+      } catch (err) {
+        console.error('Error fetching car:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCar()
+  }, [id])
+
+  // If loading
+  if (loading) {
+    return (
+      <div>
+        <Navbar />
+        <div className="not-found">
+          <h2>Loading...</h2>
+        </div>
+      </div>
+    )
+  }
 
   // If car not found
   if (!car) {
@@ -149,96 +174,70 @@ function CarDetail() {
                 </div>
               </div>
               <div className="spec-card">
-                <div className="spec-icon">⛽</div>
+                <div className="spec-icon">📍</div>
                 <div className="spec-text">
-                  <span className="spec-label">Fuel Type</span>
-                  <span className="spec-value">{car.fuel}</span>
-                </div>
-              </div>
-              <div className="spec-card">
-                <div className="spec-icon">⚙️</div>
-                <div className="spec-text">
-                  <span className="spec-label">Transmission</span>
-                  <span className="spec-value">{car.transmission}</span>
-                </div>
-              </div>
-              <div className="spec-card">
-                <div className="spec-icon">🛣️</div>
-                <div className="spec-text">
-                  <span className="spec-label">Kilometers Driven</span>
-                  <span className="spec-value">{Number(car.km).toLocaleString('en-IN')} km</span>
+                  <span className="spec-label">Location</span>
+                  <span className="spec-value">{car.location || 'Not Specified'}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Premium Seller Profile */}
-          <div className="seller-profile-card">
-            <div className="seller-header">
+          {/* Seller / Contact Action */}
+          <div className="contact-seller-card">
+            <div className="seller-meta">
               <div className="seller-avatar">
-                {car.seller.charAt(0).toUpperCase()}
+                {car.seller ? car.seller.charAt(0).toUpperCase() : 'S'}
               </div>
               <div className="seller-details">
-                <h3 className="seller-name">
-                  {car.seller} 
-                  <span className="verified-badge" title="Verified Seller">✅</span>
-                </h3>
-                <p className="seller-member-since">Member since 2023</p>
+                <p className="seller-name">{car.seller || 'Verified Seller'}</p>
+                <p className="seller-badge">✓ CarWale Verified Partner</p>
               </div>
             </div>
             
-            <p className="seller-phone">📞 {car.phone}</p>
-
-            <div className="seller-actions">
-              <button className="action-btn contact-btn" onClick={() => setShowContactModal(true)}>
-                <span className="btn-icon">📅</span> Schedule Test Drive
-              </button>
-              <a href={`tel:${car.phone}`} className="action-btn call-btn">
-                <span className="btn-icon">📞</span> Call
-              </a>
-              <a 
-                href={`https://wa.me/91${car.phone}?text=Hi, I am interested in your ${car.brand} ${car.model} listed on CarWale.`}
-                target="_blank"
-                rel="noreferrer"
-                className="action-btn whatsapp-btn"
-              >
-                <span className="btn-icon">💬</span> WhatsApp
-              </a>
-            </div>
+            <button 
+              className="primary-contact-btn"
+              onClick={() => setShowContactModal(true)}
+            >
+              📞 Contact Seller
+            </button>
+            <button 
+              className="secondary-testdrive-btn"
+              onClick={() => alert("Test Drive feature coming soon!")}
+            >
+              🚗 Schedule Test Drive
+            </button>
           </div>
-
+          
         </div>
       </div>
 
-      {/* Contact Seller Modal */}
+      {/* Modern Contact Modal */}
       {showContactModal && (
-        <div className="modal-overlay" onClick={() => setShowContactModal(false)}>
-          <div className="contact-modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-overlay fade-in" onClick={() => setShowContactModal(false)}>
+          <div className="modal-content scale-up" onClick={e => e.stopPropagation()}>
+            <button className="close-modal" onClick={() => setShowContactModal(false)}>✕</button>
+            
             <div className="modal-header">
-              <h2>Schedule Test Drive</h2>
-              <button className="close-btn" onClick={() => setShowContactModal(false)}>✕</button>
+              <div className="modal-icon">📞</div>
+              <h3>Seller Contact Details</h3>
+              <p>Reach out to the seller directly to negotiate.</p>
             </div>
-            <div className="modal-body">
-              <p className="modal-desc">Fill in your details and the seller will contact you to confirm the time.</p>
-              <div className="form-group">
-                <label>Your Name</label>
-                <input type="text" placeholder="Enter your name" defaultValue={localStorage.getItem('userName') || ''} />
+
+            <div className="contact-info-box">
+              <div className="contact-item">
+                <span className="contact-label">Name</span>
+                <span className="contact-value">{car.seller || 'Verified Seller'}</span>
               </div>
-              <div className="form-group">
-                <label>Phone Number</label>
-                <input type="tel" placeholder="Enter mobile number" />
+              <div className="contact-item">
+                <span className="contact-label">Phone</span>
+                <span className="contact-value highlight-phone">{car.phone || '+91 XXXXX XXXXX'}</span>
               </div>
-              <div className="form-group">
-                <label>Preferred Date</label>
-                <input type="date" />
-              </div>
-              <button className="submit-btn" onClick={() => {
-                alert("Request Sent Successfully!");
-                setShowContactModal(false);
-              }}>
-                Submit Request
-              </button>
             </div>
+            
+            <a href={`tel:${car.phone || ''}`} className="call-now-btn">
+              Call Now
+            </a>
           </div>
         </div>
       )}

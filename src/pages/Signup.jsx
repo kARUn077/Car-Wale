@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../api'
 import './Auth.css'
 
 function Signup() {
@@ -12,7 +13,7 @@ function Signup() {
 
   const navigate = useNavigate()
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError('')
 
@@ -32,29 +33,33 @@ function Signup() {
       return
     }
 
-    // Save user info to localStorage (later we will use a real backend)
-    // Save to users array
-    const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const exists = users.find(u => u.email === email)
-    if (exists) {
-      setError('An account with this email already exists.')
-      return
-    }
+    try {
+      const res = await fetch(`${API_URL}/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password, role })
+      })
 
-    const newUser = { name, email, password, role }
-    users.push(newUser)
-    localStorage.setItem('users', JSON.stringify(users))
+      const data = await res.json()
 
-    // Also set active user info
-    localStorage.setItem('userRole', role)
-    localStorage.setItem('userEmail', email)
-    localStorage.setItem('userName', name)
+      if (!res.ok) {
+        setError(data.error || 'Signup failed')
+        return
+      }
 
-    // Redirect based on role
-    if (role === 'buyer') {
-      navigate('/buyer-home')
-    } else {
-      navigate('/seller-home')
+      // Automatically log them in by setting active user info
+      localStorage.setItem('userRole', role)
+      localStorage.setItem('userEmail', email)
+      localStorage.setItem('userName', name)
+
+      // Redirect based on role
+      if (role === 'buyer') {
+        navigate('/buyer-home')
+      } else {
+        navigate('/seller-home')
+      }
+    } catch (err) {
+      setError('Server error. Make sure backend is running.')
     }
   }
 

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../api'
 import './Auth.css'
 
 function Login() {
@@ -12,7 +13,7 @@ function Login() {
   const navigate = useNavigate()
 
   // Handle form submit
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError('')
 
@@ -22,27 +23,31 @@ function Login() {
       return
     }
 
-    // Check against saved users in localStorage
-    const users = JSON.parse(localStorage.getItem('users') || '[]')
-    const user = users.find(u => u.email === email);
-    if (!user) {
-      setError('No account found with this email. Please sign up.')
-      return
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role })
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || 'Login failed')
+        return
+      }
+
+      // Login success — store active user info
+      localStorage.setItem('userRole', data.user.role)
+      localStorage.setItem('userEmail', data.user.email)
+      localStorage.setItem('userName', data.user.name || '')
+
+      // Redirect based on stored role
+      if (data.user.role === 'buyer') navigate('/buyer-home')
+      else navigate('/seller-home')
+    } catch (err) {
+      setError('Server error. Make sure backend is running.')
     }
-
-    if (user.password !== password) {
-      setError('Invalid email or password.')
-      return
-    }
-
-    // Login success — store active user info
-    localStorage.setItem('userRole', user.role)
-    localStorage.setItem('userEmail', user.email)
-    localStorage.setItem('userName', user.name || '')
-
-    // Redirect based on stored role
-    if (user.role === 'buyer') navigate('/buyer-home')
-    else navigate('/seller-home')
   }
 
   return (

@@ -77,7 +77,7 @@
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-dark);
+  color: #0f172a;
   margin-bottom: 8px;
 }
 
@@ -89,13 +89,18 @@
 .form-group select {
   width: 100%;
   padding: 14px 16px;
-  border: 1.5px solid var(--border-color);
+  border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   font-size: 15px;
-  color: var(--text-dark);
+  color: #0f172a;
   background: #f8fafc;
   transition: all 0.3s ease;
   box-sizing: border-box;
+}
+
+.form-group input::placeholder,
+.form-group select::placeholder {
+  color: #94a3b8;
 }
 
 .form-group input:hover,
@@ -178,8 +183,8 @@
   flex: 1;
   padding: 16px;
   background: white;
-  color: var(--text-dark);
-  border: 1.5px solid var(--border-color);
+  color: #0f172a;
+  border: 1.5px solid #e2e8f0;
   font-size: 16px;
   font-weight: 600;
   border-radius: 10px;
@@ -190,4 +195,68 @@
 .cancel-btn:hover {
   background: #f1f5f9;
   border-color: #cbd5e1;
+}
+
+/* ========================================= */
+/* =========== DARK MODE =================== */
+/* ========================================= */
+
+[data-theme='dark'] .add-car-page {
+  background-color: #0f172a;
+}
+
+[data-theme='dark'] .add-car-header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-bottom: 1px solid #334155;
+}
+
+[data-theme='dark'] .add-car-form {
+  background: #1e293b;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  border: 1px solid #334155;
+  border-top: none;
+}
+
+[data-theme='dark'] .form-group label {
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .form-group input,
+[data-theme='dark'] .form-group select {
+  background: #0f172a;
+  border-color: #334155;
+  color: #f8fafc;
+}
+
+[data-theme='dark'] .form-group input::placeholder,
+[data-theme='dark'] .form-group select::placeholder {
+  color: #64748b;
+}
+
+[data-theme='dark'] .form-group input:hover,
+[data-theme='dark'] .form-group select:hover {
+  border-color: #475569;
+}
+
+[data-theme='dark'] .form-group input:focus,
+[data-theme='dark'] .form-group select:focus {
+  border-color: #ff4d30;
+  background: #1e293b;
+  box-shadow: 0 0 0 3px rgba(255, 77, 48, 0.15);
+}
+
+[data-theme='dark'] .image-preview {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+[data-theme='dark'] .cancel-btn {
+  background: #1e293b;
+  color: #f8fafc;
+  border-color: #334155;
+}
+
+[data-theme='dark'] .cancel-btn:hover {
+  background: #334155;
+  border-color: #475569;
 }

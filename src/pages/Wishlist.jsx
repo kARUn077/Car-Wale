@@ -1,39 +1,62 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import dummyCars from '../data/carsData'
 import Toast from '../components/Toast'
+import { API_URL } from '../api'
 import './Wishlist.css'
 
 function Wishlist() {
   const navigate = useNavigate()
   const userEmail = localStorage.getItem('userEmail') || 'guest'
-  const wishlistKey = `wishlist_${userEmail}`
 
   const [toast, setToast] = useState(null)
+  const [wishlistedCars, setWishlistedCars] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  // Get all cars
-  const sellerCars = JSON.parse(localStorage.getItem('sellerCars') || '[]')
-  const allCars = [...dummyCars, ...sellerCars]
-
-  // Load wishlist IDs
-  const [wishlistIds, setWishlistIds] = useState(() => {
-    return JSON.parse(localStorage.getItem(wishlistKey) || '[]')
-  })
-
-  // Filter to only wishlisted cars
-  const wishlistedCars = allCars.filter(car => wishlistIds.includes(String(car.id)))
+  // Fetch user's wishlist (populated with car data)
+  useEffect(() => {
+    async function fetchWishlist() {
+      try {
+        const res = await fetch(`${API_URL}/users/${userEmail}`)
+        if (res.ok) {
+          const user = await res.json()
+          setWishlistedCars(user.wishlist || [])
+        }
+      } catch (err) {
+        console.error('Failed to fetch wishlist:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchWishlist()
+  }, [userEmail])
 
   function formatPrice(price) {
     if (price >= 100000) return '₹' + (price / 100000).toFixed(1) + ' Lakh'
     return '₹' + Number(price).toLocaleString('en-IN')
   }
 
-  function removeFromWishlist(carId) {
-    const updated = wishlistIds.filter(id => id !== String(carId))
-    setWishlistIds(updated)
-    localStorage.setItem(wishlistKey, JSON.stringify(updated))
-    setToast({ message: 'Removed from wishlist', type: 'info' })
+  async function removeFromWishlist(carId) {
+    try {
+      const res = await fetch(`${API_URL}/users/${userEmail}/wishlist/${carId}`, {
+        method: 'DELETE'
+      })
+      if (res.ok) {
+        setWishlistedCars(prev => prev.filter(c => c._id !== carId))
+        setToast({ message: 'Removed from wishlist', type: 'info' })
+      }
+    } catch (err) {
+      setToast({ message: 'Failed to remove', type: 'error' })
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="wishlist-page">
+        <Navbar />
+        <div className="wishlist-container"><h2>Loading...</h2></div>
+      </div>
+    )
   }
 
   return (
@@ -62,8 +85,8 @@ function Wishlist() {
         ) : (
           <div className="wishlist-grid">
             {wishlistedCars.map(car => (
-              <div key={car.id} className="wishlist-card">
-                <div className="wishlist-card-img-box" onClick={() => navigate(`/car/${car.id}`)}>
+              <div key={car._id} className="wishlist-card">
+                <div className="wishlist-card-img-box" onClick={() => navigate(`/car/${car._id}`)}>
                   <img
                     src={car.image || 'https://via.placeholder.com/300x180?text=No+Image'}
                     alt={`${car.brand} ${car.model}`}
@@ -71,13 +94,13 @@ function Wishlist() {
                   />
                   <button
                     className="remove-wish-btn"
-                    onClick={(e) => { e.stopPropagation(); removeFromWishlist(car.id) }}
+                    onClick={(e) => { e.stopPropagation(); removeFromWishlist(car._id) }}
                     title="Remove from wishlist"
                   >
                     ❤️
                   </button>
                 </div>
-                <div className="wishlist-card-info" onClick={() => navigate(`/car/${car.id}`)}>
+                <div className="wishlist-card-info" onClick={() => navigate(`/car/${car._id}`)}>
                   <h3>{car.brand} {car.model}</h3>
                   <p className="wc-meta">{car.year} • {Number(car.km || 0).toLocaleString('en-IN')} km • {car.fuel}</p>
                   <p className="wc-location">📍 {car.location}</p>

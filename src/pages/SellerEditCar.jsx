@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import { API_URL } from '../api'
 import './SellerAddCar.css'
 
 function SellerEditCar() {
@@ -8,30 +9,52 @@ function SellerEditCar() {
   const { id } = useParams()
   const sellerEmail = localStorage.getItem('userEmail') || ''
 
-  // Load the car to edit
-  const allCars = JSON.parse(localStorage.getItem('sellerCars') || '[]')
-  const carToEdit = allCars.find(c => String(c.id) === String(id))
-
-  const [form, setForm] = useState(
-    carToEdit
-      ? { ...carToEdit }
-      : {
-          brand: '', model: '', year: '', km: '',
-          fuel: 'Petrol', transmission: 'Manual',
-          price: '', location: '', image: '', seller: '', phone: '',
-        }
-  )
+  const [form, setForm] = useState({
+    brand: '', model: '', year: '', km: '',
+    fuel: 'Petrol', transmission: 'Manual',
+    price: '', location: '', image: '', seller: '', phone: '',
+  })
+  
   const [errors, setErrors] = useState({})
-  const [preview, setPreview] = useState(carToEdit?.image || '')
+  const [preview, setPreview] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [fetchError, setFetchError] = useState('')
 
-  // If car not found or doesn't belong to this seller
-  if (!carToEdit || carToEdit.sellerEmail !== sellerEmail) {
+  useEffect(() => {
+    async function fetchCar() {
+      try {
+        const res = await fetch(`${API_URL}/cars/${id}`)
+        if (res.ok) {
+          const data = await res.json()
+          if (data.sellerEmail !== sellerEmail) {
+            setFetchError("You don't have permission to edit this car.")
+          } else {
+            setForm(data)
+            setPreview(data.image || '')
+          }
+        } else {
+          setFetchError("Car not found.")
+        }
+      } catch (err) {
+        setFetchError("Server error.")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchCar()
+  }, [id, sellerEmail])
+
+  if (loading) {
+    return <div className="add-car-page"><Navbar /><div className="add-car-container"><h2>Loading...</h2></div></div>
+  }
+
+  if (fetchError) {
     return (
       <div className="add-car-page">
         <Navbar />
         <div className="add-car-container">
-          <h2>❌ Car not found</h2>
-          <p>This car listing doesn't exist or you don't have permission to edit it.</p>
+          <h2>❌ Error</h2>
+          <p>{fetchError}</p>
           <button className="cancel-btn" onClick={() => navigate('/seller-home')}>
             ← Back to Dashboard
           </button>
@@ -71,7 +94,7 @@ function SellerEditCar() {
     return errs
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     const v = validate()
     if (Object.keys(v).length) {
@@ -79,15 +102,22 @@ function SellerEditCar() {
       return
     }
 
-    // Update this car in localStorage
-    const updated = allCars.map(c =>
-      String(c.id) === String(id)
-        ? { ...form, id: c.id, sellerEmail: c.sellerEmail }
-        : c
-    )
-    localStorage.setItem('sellerCars', JSON.stringify(updated))
+    try {
+      const res = await fetch(`${API_URL}/cars/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      })
 
-    navigate('/seller-home', { state: { toast: '✅ Car listing updated successfully!' } })
+      if (res.ok) {
+        navigate('/seller-home', { state: { toast: '✅ Car listing updated successfully!' } })
+      } else {
+        const errData = await res.json()
+        setErrors({ server: errData.error || 'Failed to update car' })
+      }
+    } catch (err) {
+      setErrors({ server: 'Server error. Make sure backend is running.' })
+    }
   }
 
   return (
@@ -101,7 +131,7 @@ function SellerEditCar() {
         </div>
 
         <form className="add-car-form" onSubmit={handleSubmit}>
-
+          {errors.server && <div className="error" style={{marginBottom: '1rem'}}>⚠ {errors.server}</div>}
           {/* Brand + Model */}
           <div className="form-row">
             <div className="form-group">
@@ -154,64 +184,46 @@ function SellerEditCar() {
           {/* Price + Location */}
           <div className="form-row">
             <div className="form-group">
-              <label>Price (INR) <span className="required">*</span></label>
+              <label>Price (₹) <span className="required">*</span></label>
               <input name="price" type="number" value={form.price} onChange={handleChange}
-                placeholder="e.g. 650000" min="0" />
+                placeholder="e.g. 500000" min="0" />
               {errors.price && <div className="error">⚠ {errors.price}</div>}
             </div>
             <div className="form-group">
-              <label>Location</label>
+              <label>Location / City</label>
               <input name="location" value={form.location} onChange={handleChange} placeholder="e.g. Mumbai" />
             </div>
           </div>
 
-          {/* Seller Name + Phone */}
+          {/* Seller details */}
           <div className="form-row">
             <div className="form-group">
-              <label>Your Name <span className="required">*</span></label>
-              <input name="seller" value={form.seller} onChange={handleChange} placeholder="Your full name" />
+              <label>Seller Name <span className="required">*</span></label>
+              <input name="seller" value={form.seller} onChange={handleChange} placeholder="e.g. John Doe" />
               {errors.seller && <div className="error">⚠ {errors.seller}</div>}
             </div>
             <div className="form-group">
-              <label>Contact Phone <span className="required">*</span></label>
-              <input name="phone" type="tel" value={form.phone} onChange={handleChange}
-                placeholder="10-digit mobile number" maxLength="10" />
+              <label>Phone Number <span className="required">*</span></label>
+              <input name="phone" value={form.phone} onChange={handleChange} placeholder="e.g. 9876543210" />
               {errors.phone && <div className="error">⚠ {errors.phone}</div>}
             </div>
           </div>
 
-          {/* Image */}
-          <div className="form-row">
-            <div className="form-group">
-              <label>Upload New Image</label>
-              <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
-            </div>
-            <div className="form-group">
-              <label>Or Image URL</label>
-              <input
-                name="image"
-                value={form.image.startsWith('data:') ? '' : form.image}
-                onChange={handleChange}
-                placeholder="https://..."
-              />
-            </div>
-          </div>
-
-          {/* Image Preview */}
-          {preview && (
-            <div className="form-group">
-              <label>Preview</label>
-              <div className="image-preview">
-                <img src={preview} alt="preview"
-                  onError={(e) => { e.target.src = 'https://via.placeholder.com/300x180?text=No+Image' }} />
+          {/* Image Upload */}
+          <div className="form-group">
+            <label>Upload Car Image</label>
+            <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
+            {preview && (
+              <div className="image-preview" style={{ marginTop: '16px' }}>
+                <img src={preview} alt="Car Preview" />
               </div>
-            </div>
-          )}
+            )}
+          </div>
 
           {/* Buttons */}
           <div className="form-actions">
-            <button type="submit" className="submit-btn">💾 Save Changes</button>
             <button type="button" className="cancel-btn" onClick={() => navigate('/seller-home')}>Cancel</button>
+            <button type="submit" className="submit-btn">Save Changes</button>
           </div>
         </form>
       </div>

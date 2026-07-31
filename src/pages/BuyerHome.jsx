@@ -1,8 +1,8 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import dummyCars from '../data/carsData'
 import Toast from '../components/Toast'
+import { API_URL } from '../api'
 import './BuyerHome.css'
 
 const FUEL_COLORS = {
@@ -22,7 +22,6 @@ const QUICK_BUDGETS = [
 function BuyerHome() {
   const navigate = useNavigate()
   const userEmail = localStorage.getItem('userEmail') || 'guest'
-  const wishlistKey = `wishlist_${userEmail}`
 
   // ── Filter state ──────────────────────────────────────────
   const [searchText, setSearchText] = useState('')
@@ -42,32 +41,68 @@ function BuyerHome() {
   const [toast, setToast] = useState(null)
 
   // ── Wishlist state ─────────────────────────────────────────
-  const [wishlistIds, setWishlistIds] = useState(() =>
-    JSON.parse(localStorage.getItem(wishlistKey) || '[]')
-  )
+  const [wishlistIds, setWishlistIds] = useState([])
 
-  // ── Data ───────────────────────────────────────────────────
-  const sellerCars = JSON.parse(localStorage.getItem('sellerCars') || '[]')
-  const allCars = useMemo(() => [...dummyCars, ...sellerCars], [])
+  const [allCars, setAllCars] = useState([])
+
+  // Fetch cars from API
+  useEffect(() => {
+    async function fetchCars() {
+      try {
+        const res = await fetch(`${API_URL}/cars`)
+        if (res.ok) {
+          const data = await res.json()
+          setAllCars(data)
+        }
+      } catch (err) {
+        console.error('Failed to fetch cars:', err)
+      }
+    }
+    fetchCars()
+  }, [])
+
+  // Fetch user's wishlist IDs
+  useEffect(() => {
+    async function fetchWishlist() {
+      try {
+        const res = await fetch(`${API_URL}/users/${userEmail}`)
+        if (res.ok) {
+          const user = await res.json()
+          const ids = (user.wishlist || []).map(item => typeof item === 'string' ? item : item._id)
+          setWishlistIds(ids)
+        }
+      } catch (err) {
+        console.error('Failed to fetch wishlist:', err)
+      }
+    }
+    if (userEmail !== 'guest') fetchWishlist()
+  }, [userEmail])
 
   const brands = useMemo(() => ['All', ...new Set(allCars.map(c => c.brand))], [allCars])
   const fuels = ['All', 'Petrol', 'Diesel', 'Electric', 'Hybrid']
   const transmissions = ['All', 'Manual', 'Automatic']
 
   // ── Wishlist toggle ────────────────────────────────────────
-  function toggleWishlist(e, carId) {
+  async function toggleWishlist(e, carId) {
     e.stopPropagation()
     const id = String(carId)
-    let updated
-    if (wishlistIds.includes(id)) {
-      updated = wishlistIds.filter(w => w !== id)
-      setToast({ message: 'Removed from wishlist', type: 'info' })
-    } else {
-      updated = [...wishlistIds, id]
-      setToast({ message: '❤️ Added to wishlist!', type: 'success' })
+    try {
+      if (wishlistIds.includes(id)) {
+        await fetch(`${API_URL}/users/${userEmail}/wishlist/${id}`, { method: 'DELETE' })
+        setWishlistIds(prev => prev.filter(w => w !== id))
+        setToast({ message: 'Removed from wishlist', type: 'info' })
+      } else {
+        await fetch(`${API_URL}/users/${userEmail}/wishlist`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ carId: id })
+        })
+        setWishlistIds(prev => [...prev, id])
+        setToast({ message: '❤️ Added to wishlist!', type: 'success' })
+      }
+    } catch (err) {
+      setToast({ message: 'Failed to update wishlist', type: 'error' })
     }
-    setWishlistIds(updated)
-    localStorage.setItem(wishlistKey, JSON.stringify(updated))
   }
 
   // ── Compare toggle ─────────────────────────────────────────
@@ -290,15 +325,15 @@ function BuyerHome() {
         ) : (
           filteredCars.map(car => {
             const fuelStyle = FUEL_COLORS[car.fuel] || { bg: '#f0f2f5', color: '#555', dot: '#999' }
-            const isWished = wishlistIds.includes(String(car.id))
-            const isCompared = compareIds.includes(String(car.id))
+            const isWished = wishlistIds.includes(String(car._id))
+            const isCompared = compareIds.includes(String(car._id))
             const isNew = Number(car.year) >= new Date().getFullYear() - 1
 
             return (
               <div
-                key={car.id}
+                key={car._id}
                 className={`car-card ${isCompared ? 'car-card-compared' : ''}`}
-                onClick={() => navigate(`/car/${car.id}`)}
+                onClick={() => navigate(`/car/${car._id}`)}
               >
                 {/* Image box */}
                 <div className="card-img-box">
@@ -323,7 +358,7 @@ function BuyerHome() {
                   {/* Wishlist heart */}
                   <button
                     className={`heart-btn ${isWished ? 'wishlisted' : ''}`}
-                    onClick={(e) => toggleWishlist(e, car.id)}
+                    onClick={(e) => toggleWishlist(e, car._id)}
                     title={isWished ? 'Remove from wishlist' : 'Save to wishlist'}
                   >
                     {isWished ? '❤️' : '🤍'}
@@ -332,7 +367,7 @@ function BuyerHome() {
                   {/* Compare checkbox */}
                   <button
                     className={`compare-btn ${isCompared ? 'compare-active' : ''}`}
-                    onClick={(e) => toggleCompare(e, car.id)}
+                    onClick={(e) => toggleCompare(e, car._id)}
                     title="Add to compare"
                   >
                     {isCompared ? '✅' : '⊕'} Compare
@@ -357,7 +392,7 @@ function BuyerHome() {
                     <span className="card-price">{formatPrice(car.price)}</span>
                     <button
                       className="view-btn"
-                      onClick={(e) => { e.stopPropagation(); navigate(`/car/${car.id}`) }}
+                      onClick={(e) => { e.stopPropagation(); navigate(`/car/${car._id}`) }}
                     >
                       View →
                     </button>
@@ -379,7 +414,7 @@ function BuyerHome() {
             </div>
             <div className="compare-grid">
               {compareCars.map(car => (
-                <div key={car.id} className="compare-car-col">
+                <div key={car._id} className="compare-car-col">
                   <img
                     src={car.image || ''}
                     alt={car.brand}
@@ -406,7 +441,7 @@ function BuyerHome() {
                       ))}
                     </tbody>
                   </table>
-                  <button className="view-detail-btn" onClick={() => { setShowCompare(false); navigate(`/car/${car.id}`) }}>
+                  <button className="view-detail-btn" onClick={() => { setShowCompare(false); navigate(`/car/${car._id}`) }}>
                     View Full Details →
                   </button>
                 </div>
