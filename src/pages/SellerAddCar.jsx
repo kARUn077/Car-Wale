@@ -2,12 +2,89 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import { API_URL } from '../api'
+import { useUserLanguage, getText } from '../utils/language'
 import './SellerAddCar.css'
 
 function SellerAddCar() {
   const navigate = useNavigate()
+  const userLanguage = useUserLanguage()
   const sellerEmail = localStorage.getItem('userEmail') || ''
   const sellerNameStored = localStorage.getItem('userName') || ''
+
+  const text = getText({
+    English: {
+      header: '📋 Add a Car Listing',
+      sub: 'Fill in the details below to list your car for sale.',
+      brandReq: 'Brand is required',
+      modelReq: 'Model is required',
+      yearReq: 'Enter a valid year',
+      priceReq: 'Enter a valid price',
+      phoneReq: 'Enter a valid 10-digit phone number',
+      sellerReq: 'Seller name is required',
+      listedOk: 'Car listed successfully! 🎉',
+      addFail: 'Failed to add car',
+      serverErr: 'Server error. Make sure backend is running.',
+      submit: '🚗 Add Car Listing',
+      cancel: 'Cancel',
+      brand: 'Brand',
+      model: 'Model',
+      year: 'Year',
+      km: 'Kilometres Driven',
+      fuel: 'Fuel Type',
+      transmission: 'Transmission',
+      price: 'Price (INR)',
+      location: 'Location',
+      yourName: 'Your Name',
+      contactPhone: 'Contact Phone',
+      uploadImage: 'Upload Image',
+      orImageUrl: 'Or Image URL',
+      preview: 'Preview',
+      brandPh: 'e.g. Maruti Suzuki',
+      modelPh: 'e.g. Swift',
+      yearPh: 'e.g. 2021',
+      kmPh: 'e.g. 25000',
+      pricePh: 'e.g. 650000',
+      locationPh: 'e.g. Mumbai',
+      namePh: 'Your full name',
+      phonePh: '10-digit mobile number'
+    },
+    Hindi: {
+      header: '📋 कार लिस्टिंग जोड़ें',
+      sub: 'अपनी कार बेचने के लिए नीचे दी गई जानकारी भरें।',
+      brandReq: 'ब्रांड आवश्यक है',
+      modelReq: 'मॉडल आवश्यक है',
+      yearReq: 'सही वर्ष दर्ज करें',
+      priceReq: 'सही कीमत दर्ज करें',
+      phoneReq: 'सही 10 अंकों का मोबाइल नंबर दर्ज करें',
+      sellerReq: 'विक्रेता का नाम आवश्यक है',
+      listedOk: 'कार सफलतापूर्वक लिस्ट हो गई! 🎉',
+      addFail: 'कार जोड़ने में विफल',
+      serverErr: 'सर्वर त्रुटि। सुनिश्चित करें कि बैकएंड चल रहा है।',
+      submit: '🚗 कार लिस्टिंग जोड़ें',
+      cancel: 'रद्द करें',
+      brand: 'ब्रांड',
+      model: 'मॉडल',
+      year: 'वर्ष',
+      km: 'चलाए गए किलोमीटर',
+      fuel: 'ईंधन प्रकार',
+      transmission: 'ट्रांसमिशन',
+      price: 'कीमत (INR)',
+      location: 'स्थान',
+      yourName: 'आपका नाम',
+      contactPhone: 'संपर्क फोन',
+      uploadImage: 'इमेज अपलोड करें',
+      orImageUrl: 'या इमेज URL',
+      preview: 'प्रीव्यू',
+      brandPh: 'जैसे: मारुति सुजुकी',
+      modelPh: 'जैसे: स्विफ्ट',
+      yearPh: 'जैसे: 2021',
+      kmPh: 'जैसे: 25000',
+      pricePh: 'जैसे: 650000',
+      locationPh: 'जैसे: मुंबई',
+      namePh: 'अपना पूरा नाम',
+      phonePh: '10 अंकों का मोबाइल नंबर'
+    }
+  }, userLanguage)
 
   const [form, setForm] = useState({
     brand: '',
@@ -44,15 +121,15 @@ function SellerAddCar() {
 
   function validate() {
     const errs = {}
-    if (!form.brand.trim()) errs.brand = 'Brand is required'
-    if (!form.model.trim()) errs.model = 'Model is required'
+    if (!form.brand.trim()) errs.brand = text.brandReq
+    if (!form.model.trim()) errs.model = text.modelReq
     if (!form.year || isNaN(Number(form.year)) || form.year < 1980 || form.year > new Date().getFullYear())
-      errs.year = 'Enter a valid year'
+      errs.year = text.yearReq
     if (!form.price || isNaN(Number(form.price)) || Number(form.price) <= 0)
-      errs.price = 'Enter a valid price'
+      errs.price = text.priceReq
     if (!form.phone.trim() || !/^\d{10}$/.test(form.phone.trim()))
-      errs.phone = 'Enter a valid 10-digit phone number'
-    if (!form.seller.trim()) errs.seller = 'Seller name is required'
+      errs.phone = text.phoneReq
+    if (!form.seller.trim()) errs.seller = text.sellerReq
     return errs
   }
 
@@ -77,13 +154,13 @@ function SellerAddCar() {
       })
 
       if (res.ok) {
-        navigate('/seller-home', { state: { toast: 'Car listed successfully! 🎉' } })
+        navigate('/seller-home', { state: { toast: text.listedOk } })
       } else {
         const errData = await res.json()
-        setErrors({ server: errData.error || 'Failed to add car' })
+        setErrors({ server: errData.error || text.addFail })
       }
     } catch (err) {
-      setErrors({ server: 'Server error. Make sure backend is running.' })
+      setErrors({ server: text.serverErr })
     }
   }
 
@@ -93,8 +170,8 @@ function SellerAddCar() {
 
       <div className="add-car-container">
         <div className="add-car-header">
-          <h2>📋 Add a Car Listing</h2>
-          <p>Fill in the details below to list your car for sale.</p>
+          <h2>{text.header}</h2>
+          <p>{text.sub}</p>
         </div>
 
         <form className="add-car-form" onSubmit={handleSubmit}>
@@ -102,22 +179,22 @@ function SellerAddCar() {
           {/* Brand + Model */}
           <div className="form-row">
             <div className="form-group">
-              <label>Brand <span className="required">*</span></label>
+              <label>{text.brand} <span className="required">*</span></label>
               <input
                 name="brand"
                 value={form.brand}
                 onChange={handleChange}
-                placeholder="e.g. Maruti Suzuki"
+                placeholder={text.brandPh}
               />
               {errors.brand && <div className="error">⚠ {errors.brand}</div>}
             </div>
             <div className="form-group">
-              <label>Model <span className="required">*</span></label>
+              <label>{text.model} <span className="required">*</span></label>
               <input
                 name="model"
                 value={form.model}
                 onChange={handleChange}
-                placeholder="e.g. Swift"
+                placeholder={text.modelPh}
               />
               {errors.model && <div className="error">⚠ {errors.model}</div>}
             </div>
@@ -126,26 +203,26 @@ function SellerAddCar() {
           {/* Year + KM */}
           <div className="form-row">
             <div className="form-group">
-              <label>Year <span className="required">*</span></label>
+              <label>{text.year} <span className="required">*</span></label>
               <input
                 name="year"
                 type="number"
                 value={form.year}
                 onChange={handleChange}
-                placeholder="e.g. 2021"
+                placeholder={text.yearPh}
                 min="1980"
                 max={new Date().getFullYear()}
               />
               {errors.year && <div className="error">⚠ {errors.year}</div>}
             </div>
             <div className="form-group">
-              <label>Kilometres Driven</label>
+              <label>{text.km}</label>
               <input
                 name="km"
                 type="number"
                 value={form.km}
                 onChange={handleChange}
-                placeholder="e.g. 25000"
+                placeholder={text.kmPh}
                 min="0"
               />
             </div>
@@ -154,7 +231,7 @@ function SellerAddCar() {
           {/* Fuel + Transmission */}
           <div className="form-row">
             <div className="form-group">
-              <label>Fuel Type</label>
+              <label>{text.fuel}</label>
               <select name="fuel" value={form.fuel} onChange={handleChange}>
                 <option>Petrol</option>
                 <option>Diesel</option>
@@ -163,7 +240,7 @@ function SellerAddCar() {
               </select>
             </div>
             <div className="form-group">
-              <label>Transmission</label>
+              <label>{text.transmission}</label>
               <select name="transmission" value={form.transmission} onChange={handleChange}>
                 <option>Manual</option>
                 <option>Automatic</option>
@@ -174,24 +251,24 @@ function SellerAddCar() {
           {/* Price + Location */}
           <div className="form-row">
             <div className="form-group">
-              <label>Price (INR) <span className="required">*</span></label>
+              <label>{text.price} <span className="required">*</span></label>
               <input
                 name="price"
                 type="number"
                 value={form.price}
                 onChange={handleChange}
-                placeholder="e.g. 650000"
+                placeholder={text.pricePh}
                 min="0"
               />
               {errors.price && <div className="error">⚠ {errors.price}</div>}
             </div>
             <div className="form-group">
-              <label>Location</label>
+              <label>{text.location}</label>
               <input
                 name="location"
                 value={form.location}
                 onChange={handleChange}
-                placeholder="e.g. Mumbai"
+                placeholder={text.locationPh}
               />
             </div>
           </div>
@@ -199,23 +276,23 @@ function SellerAddCar() {
           {/* Seller Name + Phone */}
           <div className="form-row">
             <div className="form-group">
-              <label>Your Name <span className="required">*</span></label>
+              <label>{text.yourName} <span className="required">*</span></label>
               <input
                 name="seller"
                 value={form.seller}
                 onChange={handleChange}
-                placeholder="Your full name"
+                placeholder={text.namePh}
               />
               {errors.seller && <div className="error">⚠ {errors.seller}</div>}
             </div>
             <div className="form-group">
-              <label>Contact Phone <span className="required">*</span></label>
+              <label>{text.contactPhone} <span className="required">*</span></label>
               <input
                 name="phone"
                 type="tel"
                 value={form.phone}
                 onChange={handleChange}
-                placeholder="10-digit mobile number"
+                placeholder={text.phonePh}
                 maxLength="10"
               />
               {errors.phone && <div className="error">⚠ {errors.phone}</div>}
@@ -225,11 +302,11 @@ function SellerAddCar() {
           {/* Image */}
           <div className="form-row">
             <div className="form-group">
-              <label>Upload Image</label>
+              <label>{text.uploadImage}</label>
               <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
             </div>
             <div className="form-group">
-              <label>Or Image URL</label>
+              <label>{text.orImageUrl}</label>
               <input
                 name="image"
                 value={form.image.startsWith('data:') ? '' : form.image}
@@ -242,7 +319,7 @@ function SellerAddCar() {
           {/* Image Preview */}
           {preview && (
             <div className="form-group">
-              <label>Preview</label>
+              <label>{text.preview}</label>
               <div className="image-preview">
                 <img
                   src={preview}
@@ -255,8 +332,8 @@ function SellerAddCar() {
 
           {/* Buttons */}
           <div className="form-actions">
-            <button type="submit" className="submit-btn">🚗 Add Car Listing</button>
-            <button type="button" className="cancel-btn" onClick={() => navigate('/seller-home')}>Cancel</button>
+            <button type="submit" className="submit-btn">{text.submit}</button>
+            <button type="button" className="cancel-btn" onClick={() => navigate('/seller-home')}>{text.cancel}</button>
           </div>
         </form>
       </div>

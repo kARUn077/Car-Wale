@@ -9,7 +9,8 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/carwale';
+const LOCAL_MONGO_URI = 'mongodb://127.0.0.1:27017/carwale';
+const MONGO_URIS = [process.env.MONGO_URI, LOCAL_MONGO_URI].filter(Boolean);
 
 // Middleware
 app.use(cors());
@@ -21,10 +22,28 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/users', userRoutes);
 
-// Connect to MongoDB
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('MongoDB connection error:', err));
+async function connectMongo() {
+  let lastError = null;
+
+  for (const uri of MONGO_URIS) {
+    try {
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 5000,
+      });
+
+      console.log(`Connected to MongoDB: ${uri.includes('mongodb+srv') ? 'Atlas' : 'Local'}`);
+      return;
+    } catch (err) {
+      lastError = err;
+      console.error(`MongoDB connection failed for ${uri}:`, err.message);
+    }
+  }
+
+  console.error('All MongoDB connection attempts failed.');
+  console.error(lastError?.stack || lastError);
+}
+
+connectMongo();
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

@@ -1,9 +1,23 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { useUserLanguage, getText } from '../utils/language'
 import './CarDetail.css'; // Reusing the not-found styles from CarDetail
 
 function NotFound() {
   const navigate = useNavigate();
+  const userLanguage = useUserLanguage()
+  const text = getText({
+    English: {
+      title: '404 - Page Not Found',
+      sub: "The page you are looking for doesn't exist or has been moved.",
+      cta: 'Go Back Home'
+    },
+    Hindi: {
+      title: '404 - पेज नहीं मिला',
+      sub: 'जिस पेज को आप खोज रहे हैं वह मौजूद नहीं है या स्थानांतरित हो गया है।',
+      cta: 'होम पर जाएं'
+    }
+  }, userLanguage)
 
   return (
     <div className="detail-page">
@@ -11,10 +25,10 @@ function NotFound() {
       <div className="not-found" style={{ padding: '140px 20px', textAlign: 'center' }}>
         <div className="not-found-icon" style={{ fontSize: '72px', marginBottom: '24px' }}>😕</div>
         <h2 style={{ fontSize: '32px', fontWeight: '900', color: 'var(--text-dark)', marginBottom: '12px' }}>
-          404 - Page Not Found
+          {text.title}
         </h2>
         <p style={{ fontSize: '16px', color: 'var(--text-light)', marginBottom: '32px' }}>
-          The page you are looking for doesn't exist or has been moved.
+          {text.sub}
         </p>
         <button 
           onClick={() => navigate('/buyer-home')}
@@ -31,7 +45,7 @@ function NotFound() {
             boxShadow: '0 8px 24px rgba(224,48,18,0.3)'
           }}
         >
-          Go Back Home
+          {text.cta}
         </button>
       </div>
     </div>

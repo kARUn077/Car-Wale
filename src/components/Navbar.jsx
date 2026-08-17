@@ -1,7 +1,40 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useTheme } from '../context/ThemeContext'
+import { API_URL } from '../api'
 import './Navbar.css'
+
+const DEFAULT_CITY = 'All India'
+const LEGACY_CITY_MAP = {
+  'New Delhi': 'Delhi'
+}
+
+const textMap = {
+  English: {
+    browseCars: 'Browse Cars',
+    wishlist: 'Wishlist',
+    myListings: 'My Listings',
+    addCar: 'Add Car',
+    selectCity: 'Select City',
+    selectLanguage: 'Select Language',
+    changeLocation: 'Change Location',
+    changeLanguage: 'Change Language',
+    toggleTheme: 'Toggle theme',
+    logout: 'Logout'
+  },
+  Hindi: {
+    browseCars: 'कारें देखें',
+    wishlist: 'विशलिस्ट',
+    myListings: 'मेरी लिस्टिंग',
+    addCar: 'कार जोड़ें',
+    selectCity: 'शहर चुनें',
+    selectLanguage: 'भाषा चुनें',
+    changeLocation: 'स्थान बदलें',
+    changeLanguage: 'भाषा बदलें',
+    toggleTheme: 'थीम बदलें',
+    logout: 'लॉग आउट'
+  }
+}
 
 function Navbar() {
   const navigate = useNavigate()
@@ -10,6 +43,74 @@ function Navbar() {
   const name = localStorage.getItem('userName') || 'User'
   const [open, setOpen] = useState(false)
   const { isDark, toggleTheme } = useTheme()
+  const [availableCities, setAvailableCities] = useState([])
+  
+  // Location & Language State
+  const [locationName, setLocationName] = useState(() => {
+    const stored = localStorage.getItem('userLocation') || DEFAULT_CITY
+    return LEGACY_CITY_MAP[stored] || stored
+  })
+  const [language, setLanguage] = useState(localStorage.getItem('userLanguage') || 'English')
+  
+  const [showLocDrop, setShowLocDrop] = useState(false)
+  const [showLangDrop, setShowLangDrop] = useState(false)
+  const text = textMap[language] || textMap.English
+
+  const cities = useMemo(() => {
+    const uniqueCities = Array.from(new Set(availableCities.filter(Boolean))).sort((a, b) => a.localeCompare(b))
+    return [DEFAULT_CITY, ...uniqueCities]
+  }, [availableCities])
+  const languages = ['English', 'Hindi']
+
+  useEffect(() => {
+    async function fetchCities() {
+      try {
+        const res = await fetch(`${API_URL}/cars`)
+        if (!res.ok) return
+        const cars = await res.json()
+        const locations = cars
+          .map(car => (car.location || '').trim())
+          .filter(Boolean)
+        setAvailableCities(locations)
+      } catch (err) {
+        // Silent fail; city dropdown will still show default option.
+      }
+    }
+
+    fetchCities()
+  }, [])
+
+  useEffect(() => {
+    if (!cities.length) return
+    const normalized = LEGACY_CITY_MAP[locationName] || locationName
+    if (!cities.includes(normalized)) {
+      setLocationName(DEFAULT_CITY)
+      localStorage.setItem('userLocation', DEFAULT_CITY)
+      window.dispatchEvent(new Event('preferencesChanged'))
+      return
+    }
+
+    if (normalized !== locationName) {
+      setLocationName(normalized)
+      localStorage.setItem('userLocation', normalized)
+      window.dispatchEvent(new Event('preferencesChanged'))
+    }
+  }, [cities, locationName])
+
+  function handleLocChange(city) {
+    const normalized = LEGACY_CITY_MAP[city] || city
+    setLocationName(normalized)
+    localStorage.setItem('userLocation', normalized)
+    setShowLocDrop(false)
+    window.dispatchEvent(new Event('preferencesChanged'))
+  }
+
+  function handleLangChange(lang) {
+    setLanguage(lang)
+    localStorage.setItem('userLanguage', lang)
+    setShowLangDrop(false)
+    window.dispatchEvent(new Event('preferencesChanged'))
+  }
 
   function handleLogout() {
     localStorage.clear()
@@ -62,13 +163,13 @@ function Navbar() {
                 <span className="nav-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
                 </span>
-                <span>Browse Cars</span>
+                <span>{text.browseCars}</span>
               </a>
               <a onClick={() => go('/wishlist')} className={`nav-link ${isActive('/wishlist') ? 'active' : ''}`}>
                 <span className="nav-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
                 </span>
-                <span>Wishlist</span>
+                <span>{text.wishlist}</span>
               </a>
             </>
           )}
@@ -78,13 +179,13 @@ function Navbar() {
                 <span className="nav-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg>
                 </span>
-                <span>My Listings</span>
+                <span>{text.myListings}</span>
               </a>
               <a onClick={() => go('/seller-add-car')} className="nav-link nav-link-cta">
                 <span className="nav-icon">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 </span>
-                <span>Add Car</span>
+                <span>{text.addCar}</span>
               </a>
             </>
           )}
@@ -92,7 +193,48 @@ function Navbar() {
 
         {/* Right - User actions */}
         <div className="navbar-right">
-          <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle Dark Mode" title="Toggle theme">
+          
+          {/* Location Selector */}
+          <div className="nav-dropdown-container">
+            <div className="nav-pill-btn location-selector" title={text.changeLocation} onClick={() => { setShowLocDrop(!showLocDrop); setShowLangDrop(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="nav-pill-icon"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              <span className="nav-pill-text">{locationName}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`nav-pill-caret ${showLocDrop ? 'rotated' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            {showLocDrop && (
+              <div className="nav-dropdown-menu fade-in">
+                <div className="dropdown-header">{text.selectCity}</div>
+                {cities.map(c => (
+                  <div key={c} className={`dropdown-item ${c === locationName ? 'active' : ''}`} onClick={() => handleLocChange(c)}>
+                    {c}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Language Selector */}
+          <div className="nav-dropdown-container">
+            <div className="nav-pill-btn language-selector" title={text.changeLanguage} onClick={() => { setShowLangDrop(!showLangDrop); setShowLocDrop(false); }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="nav-pill-icon"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>
+              <span className="nav-pill-text">{language}</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`nav-pill-caret ${showLangDrop ? 'rotated' : ''}`}><path d="m6 9 6 6 6-6"/></svg>
+            </div>
+            {showLangDrop && (
+              <div className="nav-dropdown-menu fade-in">
+                <div className="dropdown-header">{text.selectLanguage}</div>
+                {languages.map(l => (
+                  <div key={l} className={`dropdown-item ${l === language ? 'active' : ''}`} onClick={() => handleLangChange(l)}>
+                    {l}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="nav-divider"></div>
+
+          <button className="theme-toggle-btn" onClick={toggleTheme} aria-label={text.toggleTheme} title={text.toggleTheme}>
             <span className="theme-icon">{isDark ? '☀️' : '🌙'}</span>
           </button>
 
@@ -101,7 +243,7 @@ function Navbar() {
             <span className="nav-user-name">{name}</span>
           </div>
 
-          <button className="nav-logout-btn" onClick={handleLogout} title="Logout">
+          <button className="nav-logout-btn" onClick={handleLogout} title={text.logout}>
             <span className="logout-icon">⏻</span>
           </button>
         </div>

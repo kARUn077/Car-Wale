@@ -3,7 +3,13 @@ import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Toast from '../components/Toast'
 import { API_URL } from '../api'
+import { useUserLanguage } from '../utils/language'
 import './BuyerHome.css'
+
+const DEFAULT_CITY = 'All India'
+const LEGACY_CITY_MAP = {
+  'New Delhi': 'Delhi'
+}
 
 const FUEL_COLORS = {
   Petrol: { bg: '#fff4e5', color: '#e07800', dot: '#f59e0b' },
@@ -44,6 +50,84 @@ function BuyerHome() {
   const [wishlistIds, setWishlistIds] = useState([])
 
   const [allCars, setAllCars] = useState([])
+
+  // ── User Preferences ───────────────────────────────────────
+  const [userLocation, setUserLocation] = useState(() => {
+    const stored = localStorage.getItem('userLocation') || DEFAULT_CITY
+    return LEGACY_CITY_MAP[stored] || stored
+  })
+  const userLanguage = useUserLanguage()
+
+  const baseText = {
+    English: {
+      brand: 'Brand',
+      fuel: 'Fuel',
+      transmission: 'Transmission',
+      minPrice: 'Min Price (₹)',
+      maxPrice: 'Max Price (₹)',
+      sortBy: 'Sort By',
+      reset: 'Reset',
+      carsFound: 'cars found',
+      filters: 'Filters applied',
+      compare: 'Compare',
+      wishlist: 'Wishlist',
+      noCars: 'No cars found',
+      noCarsSub: 'Try adjusting your filters or search term.',
+      resetAll: 'Reset All Filters',
+      by: 'by',
+      findCars: 'Find Cars',
+      popularBudget: 'Popular Budgets:',
+      searchPlaceholder: 'Search by brand, model, city...',
+      heroTitle: 'Discover Your',
+      heroAccent: 'Perfect Drive',
+      heroDesc: 'Explore thousands of verified premium & everyday cars across the nation.',
+      resultsLabel: 'car',
+      view: 'View',
+      clearCompare: 'Clear Comparison',
+      compareTitle: 'Car Comparison',
+      compareDetail: 'View Full Details',
+    },
+    Hindi: {
+      brand: 'ब्रांड',
+      fuel: 'ईंधन',
+      transmission: 'गियरबॉक्स',
+      minPrice: 'न्यूनतम कीमत (₹)',
+      maxPrice: 'अधिकतम कीमत (₹)',
+      sortBy: 'क्रमबद्ध करें',
+      reset: 'रीसेट',
+      carsFound: 'कारें मिलीं',
+      filters: 'फ़िल्टर लागू',
+      compare: 'तुलना',
+      wishlist: 'विशलिस्ट',
+      noCars: 'कोई कार नहीं मिली',
+      noCarsSub: 'फ़िल्टर या खोज शब्द बदलकर देखें।',
+      resetAll: 'सभी फ़िल्टर रीसेट करें',
+      by: 'द्वारा',
+      findCars: 'कारें खोजें',
+      popularBudget: 'लोकप्रिय बजट:',
+      searchPlaceholder: 'ब्रांड, मॉडल, शहर से खोजें...',
+      heroTitle: 'अपनी',
+      heroAccent: 'परफेक्ट ड्राइव',
+      heroDesc: 'देशभर की हजारों वेरिफाइड प्रीमियम और रोज़मर्रा की कारें देखें।',
+      resultsLabel: 'कार',
+      view: 'देखें',
+      clearCompare: 'तुलना साफ़ करें',
+      compareTitle: 'कार तुलना',
+      compareDetail: 'पूरा विवरण देखें',
+    }
+  }
+
+  const text = baseText[userLanguage] || baseText.English
+
+  useEffect(() => {
+    function handlePrefsChange() {
+      const stored = localStorage.getItem('userLocation') || DEFAULT_CITY
+      const normalized = LEGACY_CITY_MAP[stored] || stored
+      setUserLocation(normalized)
+    }
+    window.addEventListener('preferencesChanged', handlePrefsChange)
+    return () => window.removeEventListener('preferencesChanged', handlePrefsChange)
+  }, [])
 
   // Fetch cars from API
   useEffect(() => {
@@ -90,7 +174,7 @@ function BuyerHome() {
       if (wishlistIds.includes(id)) {
         await fetch(`${API_URL}/users/${userEmail}/wishlist/${id}`, { method: 'DELETE' })
         setWishlistIds(prev => prev.filter(w => w !== id))
-        setToast({ message: 'Removed from wishlist', type: 'info' })
+        setToast({ message: userLanguage === 'Hindi' ? 'विशलिस्ट से हटाया गया' : 'Removed from wishlist', type: 'info' })
       } else {
         await fetch(`${API_URL}/users/${userEmail}/wishlist`, {
           method: 'POST',
@@ -98,10 +182,10 @@ function BuyerHome() {
           body: JSON.stringify({ carId: id })
         })
         setWishlistIds(prev => [...prev, id])
-        setToast({ message: '❤️ Added to wishlist!', type: 'success' })
+        setToast({ message: userLanguage === 'Hindi' ? '❤️ विशलिस्ट में जोड़ दिया गया!' : '❤️ Added to wishlist!', type: 'success' })
       }
     } catch (err) {
-      setToast({ message: 'Failed to update wishlist', type: 'error' })
+      setToast({ message: userLanguage === 'Hindi' ? 'विशलिस्ट अपडेट नहीं हो सकी' : 'Failed to update wishlist', type: 'error' })
     }
   }
 
@@ -113,12 +197,12 @@ function BuyerHome() {
       setCompareIds(prev => prev.filter(i => i !== id))
     } else {
       if (compareIds.length >= 2) {
-        setToast({ message: 'Max 2 cars can be compared at once.', type: 'info' })
+        setToast({ message: userLanguage === 'Hindi' ? 'एक समय में अधिकतम 2 कारों की तुलना कर सकते हैं।' : 'Max 2 cars can be compared at once.', type: 'info' })
         return
       }
       setCompareIds(prev => [...prev, id])
       if (compareIds.length === 1) {
-        setToast({ message: '✅ 2 cars selected! Click "Compare" to see.', type: 'success' })
+        setToast({ message: userLanguage === 'Hindi' ? '✅ 2 कारें चुनी गईं! देखने के लिए "तुलना" दबाएं।' : '✅ 2 cars selected! Click "Compare" to see.', type: 'success' })
       }
     }
   }
@@ -146,12 +230,13 @@ function BuyerHome() {
       const brandMatch = selectedBrand === 'All' || car.brand === selectedBrand
       const fuelMatch  = selectedFuel === 'All'  || car.fuel === selectedFuel
       const transMatch = selectedTransmission === 'All' || car.transmission === selectedTransmission
+      const locationMatch = !userLocation || userLocation === 'All India' || (car.location && car.location.toLowerCase() === userLocation.toLowerCase())
 
       let budgetMatch = true
       if (minPrice) budgetMatch = budgetMatch && Number(car.price) >= Number(minPrice)
       if (maxPrice) budgetMatch = budgetMatch && Number(car.price) <= Number(maxPrice)
 
-      return searchMatch && brandMatch && fuelMatch && transMatch && budgetMatch
+      return searchMatch && brandMatch && fuelMatch && transMatch && budgetMatch && locationMatch
     })
 
     return [...cars].sort((a, b) => {
@@ -162,7 +247,7 @@ function BuyerHome() {
       if (sortBy === 'km-asc')     return Number(a.km)    - Number(b.km)
       return 0
     })
-  }, [allCars, searchText, selectedBrand, selectedFuel, selectedTransmission, minPrice, maxPrice, sortBy])
+  }, [allCars, searchText, selectedBrand, selectedFuel, selectedTransmission, minPrice, maxPrice, sortBy, userLocation])
 
   // ── Helpers ────────────────────────────────────────────────
   function formatPrice(price) {
@@ -185,50 +270,66 @@ function BuyerHome() {
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      {/* ═══════════════ HERO ═══════════════ */}
-      <div className="hero-section">
+      {/* ═══════════════ PREMIUM HERO ═══════════════ */}
+      <div className="hero-section premium-hero">
+        <div className="hero-background-overlay"></div>
         <div className="hero-content">
-          <div className="hero-badge">🏆 India's Trusted Car Marketplace</div>
-          <h1>Find Your <span className="hero-accent">Dream Car</span></h1>
-          <p>Search from hundreds of verified new &amp; used cars across India</p>
-
-          <div className="search-bar">
-            <span className="search-icon">🔍</span>
-            <input
-              type="text"
-              placeholder="Search by brand, model, city..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            {searchText && (
-              <button className="search-clear" onClick={() => setSearchText('')}>✕</button>
+          <div className="hero-text-content">
+            <div className="hero-badge fade-in-up">🌟 India&apos;s Premier Auto Marketplace</div>
+            {userLanguage === 'Hindi' ? (
+              <>
+                <h1 className="fade-in-up delay-1">{text.heroTitle} <span className="hero-accent">{text.heroAccent}</span> खोजें</h1>
+                <p className="fade-in-up delay-2">{text.heroDesc}</p>
+              </>
+            ) : (
+              <>
+                <h1 className="fade-in-up delay-1">{text.heroTitle} <span className="hero-accent">{text.heroAccent}</span></h1>
+                <p className="fade-in-up delay-2">{text.heroDesc}</p>
+              </>
             )}
-            <button className="search-btn">Search</button>
           </div>
 
-          {/* Quick budget chips */}
-          <div className="budget-chips">
-            {QUICK_BUDGETS.map((b, i) => (
-              <button
-                key={i}
-                className={`budget-chip ${activeBudget === i ? 'active' : ''}`}
-                onClick={() => applyBudget(i)}
-              >
-                {b.label}
-              </button>
-            ))}
+          {/* Glassmorphic Search Container */}
+          <div className="search-glass-container fade-in-up delay-3">
+            <div className="search-bar">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder={text.searchPlaceholder}
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              {searchText && (
+                <button className="search-clear" onClick={() => setSearchText('')}>✕</button>
+              )}
+              <button className="search-btn">{text.findCars}</button>
+            </div>
+
+            {/* Quick budget chips */}
+            <div className="budget-chips">
+              <span className="budget-label">{text.popularBudget}</span>
+              {QUICK_BUDGETS.map((b, i) => (
+                <button
+                  key={i}
+                  className={`budget-chip ${activeBudget === i ? 'active' : ''}`}
+                  onClick={() => applyBudget(i)}
+                >
+                  {b.label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Hero Stats */}
-        <div className="hero-stats">
-          <div className="h-stat"><span>{allCars.length}+</span><p>Cars Listed</p></div>
+        {/* Floating Hero Stats */}
+        <div className="hero-stats floating-stats fade-in-up delay-4">
+          <div className="h-stat"><span>{allCars.length}+</span><p>{userLanguage === 'Hindi' ? 'कारें लिस्टेड' : 'Cars Listed'}</p></div>
           <div className="h-stat-divider" />
-          <div className="h-stat"><span>6</span><p>Cities</p></div>
+          <div className="h-stat"><span>6</span><p>{userLanguage === 'Hindi' ? 'शहर' : 'Cities'}</p></div>
           <div className="h-stat-divider" />
-          <div className="h-stat"><span>100%</span><p>Verified</p></div>
+          <div className="h-stat"><span>100%</span><p>{userLanguage === 'Hindi' ? 'सत्यापित' : 'Verified'}</p></div>
           <div className="h-stat-divider" />
-          <div className="h-stat"><span>Free</span><p>Contact Seller</p></div>
+          <div className="h-stat"><span>Free</span><p>{userLanguage === 'Hindi' ? 'विक्रेता से संपर्क' : 'Contact Seller'}</p></div>
         </div>
       </div>
 
@@ -236,28 +337,28 @@ function BuyerHome() {
       <div className="filter-bar">
         <div className="filter-bar-inner">
           <div className="filter-group">
-            <label>Brand</label>
+            <label>{text.brand}</label>
             <select value={selectedBrand} onChange={e => setSelectedBrand(e.target.value)}>
               {brands.map(b => <option key={b}>{b}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Fuel</label>
+            <label>{text.fuel}</label>
             <select value={selectedFuel} onChange={e => setSelectedFuel(e.target.value)}>
               {fuels.map(f => <option key={f}>{f}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Transmission</label>
+            <label>{text.transmission}</label>
             <select value={selectedTransmission} onChange={e => setSelectedTransmission(e.target.value)}>
               {transmissions.map(t => <option key={t}>{t}</option>)}
             </select>
           </div>
 
           <div className="filter-group">
-            <label>Min Price (₹)</label>
+            <label>{text.minPrice}</label>
             <input
               type="number" placeholder="e.g. 500000"
               value={minPrice}
@@ -266,7 +367,7 @@ function BuyerHome() {
           </div>
 
           <div className="filter-group">
-            <label>Max Price (₹)</label>
+            <label>{text.maxPrice}</label>
             <input
               type="number" placeholder="e.g. 1500000"
               value={maxPrice}
@@ -275,7 +376,7 @@ function BuyerHome() {
           </div>
 
           <div className="filter-group">
-            <label>Sort By</label>
+            <label>{text.sortBy}</label>
             <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
               <option value="default">Default</option>
               <option value="price-asc">Price: Low → High</option>
@@ -286,7 +387,7 @@ function BuyerHome() {
             </select>
           </div>
 
-          <button className="reset-btn" onClick={resetFilters}>✕ Reset</button>
+          <button className="reset-btn" onClick={resetFilters}>✕ {text.reset}</button>
         </div>
       </div>
 
@@ -294,20 +395,20 @@ function BuyerHome() {
       <div className="results-bar">
         <div className="results-left">
           <span className="results-count">{filteredCars.length}</span>
-          <span className="results-label">car{filteredCars.length !== 1 ? 's' : ''} found</span>
+          <span className="results-label">{userLanguage === 'Hindi' ? text.resultsLabel : text.resultsLabel}{filteredCars.length !== 1 && userLanguage !== 'Hindi' ? 's' : ''} {userLanguage === 'Hindi' ? 'मिली' : 'found'}</span>
           {(searchText || selectedBrand !== 'All' || selectedFuel !== 'All' || selectedTransmission !== 'All' || minPrice || maxPrice) && (
-            <span className="active-filters-hint">· Filters applied</span>
+            <span className="active-filters-hint">· {text.filters}</span>
           )}
         </div>
         <div className="results-right">
           {compareIds.length > 0 && (
             <button className="compare-trigger-btn" onClick={() => setShowCompare(true)}>
-              ⚖️ Compare ({compareIds.length}/2)
+              ⚖️ {text.compare} ({compareIds.length}/2)
             </button>
           )}
           {wishlistIds.length > 0 && (
             <button className="wishlist-link" onClick={() => navigate('/wishlist')}>
-              ❤️ Wishlist ({wishlistIds.length})
+              ❤️ {text.wishlist} ({wishlistIds.length})
             </button>
           )}
         </div>
@@ -318,9 +419,9 @@ function BuyerHome() {
         {filteredCars.length === 0 ? (
           <div className="no-results">
             <div className="no-results-icon">🔍</div>
-            <h3>No cars found</h3>
-            <p>Try adjusting your filters or search term.</p>
-            <button className="reset-btn-lg" onClick={resetFilters}>Reset All Filters</button>
+            <h3>{text.noCars}</h3>
+            <p>{text.noCarsSub}</p>
+            <button className="reset-btn-lg" onClick={resetFilters}>{text.resetAll}</button>
           </div>
         ) : (
           filteredCars.map(car => {
@@ -394,7 +495,7 @@ function BuyerHome() {
                       className="view-btn"
                       onClick={(e) => { e.stopPropagation(); navigate(`/car/${car._id}`) }}
                     >
-                      View →
+                      {text.view} →
                     </button>
                   </div>
                 </div>
@@ -409,7 +510,7 @@ function BuyerHome() {
         <div className="compare-overlay" onClick={() => setShowCompare(false)}>
           <div className="compare-modal" onClick={e => e.stopPropagation()}>
             <div className="compare-modal-header">
-              <h2>⚖️ Car Comparison</h2>
+              <h2>⚖️ {text.compareTitle}</h2>
               <button className="compare-close" onClick={() => setShowCompare(false)}>✕</button>
             </div>
             <div className="compare-grid">
@@ -442,14 +543,14 @@ function BuyerHome() {
                     </tbody>
                   </table>
                   <button className="view-detail-btn" onClick={() => { setShowCompare(false); navigate(`/car/${car._id}`) }}>
-                    View Full Details →
+                    {text.compareDetail} →
                   </button>
                 </div>
               ))}
             </div>
             <div className="compare-modal-footer">
               <button className="clear-compare-btn" onClick={() => { setCompareIds([]); setShowCompare(false) }}>
-                Clear Comparison
+                {text.clearCompare}
               </button>
             </div>
           </div>
