@@ -41,7 +41,7 @@ router.post('/', async (req, res) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Use gemini-1.5-flash — fast, free tier supported
+    // Use gemini-2.5-flash — fast, free tier supported
     const model = genAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
       systemInstruction: SYSTEM_PROMPT
@@ -71,6 +71,16 @@ router.post('/', async (req, res) => {
 
     if (error.message?.includes('quota') || error.message?.includes('RESOURCE_EXHAUSTED')) {
       return res.status(429).json({ error: 'API quota exceeded. Please try again later.' });
+    }
+
+    f(
+      error.message?.includes('503') ||
+      error.message?.includes('Service Unavailable') ||
+      error.message?.includes('high demand')
+    ) {
+      return res.status(503).json({
+        error: 'AI service is temporarily busy. Please try again in a few seconds.'
+      });
     }
 
     res.status(500).json({
