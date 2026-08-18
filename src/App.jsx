@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import BuyerHome from './pages/BuyerHome'
@@ -10,10 +10,15 @@ import Wishlist from './pages/Wishlist'
 import ProtectedRoute from './components/ProtectedRoute'
 import NotFound from './pages/NotFound'
 import Profile from './pages/Profile'
+import AiChatbot from './components/AiChatbot'
+import Footer from './components/Footer'
 
-function App() {
+function AppLayout() {
+  const location = useLocation()
+  const hideFooter = ['/login', '/signup'].includes(location.pathname)
+
   return (
-    <BrowserRouter>
+    <>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
 
@@ -50,6 +55,16 @@ function App() {
         {/* Catch-all 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+      {!hideFooter && <Footer />}
+      <AiChatbot />
+    </>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppLayout />
     </BrowserRouter>
   )
 }

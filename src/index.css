@@ -47,9 +47,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
+  overflow-x: hidden;
+  max-width: 100%;
   font-family: 'Outfit', sans-serif;
   background:
     radial-gradient(circle at top left, rgba(255, 51, 51, 0.08), transparent 20%),
@@ -68,6 +72,13 @@ body {
 
 #root {
   min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 a {

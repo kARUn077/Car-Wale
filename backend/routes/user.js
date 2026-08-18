@@ -18,9 +18,9 @@ router.get('/:email', async (req, res) => {
 router.put('/:email', async (req, res) => {
   try {
     const updatedUser = await User.findOneAndUpdate(
-      { email: req.params.email }, 
-      req.body, 
-      { new: true }
+      { email: req.params.email },
+      req.body,
+      { returnDocument: 'after' }
     );
     res.json(updatedUser);
   } catch (err) {
@@ -33,13 +33,13 @@ router.post('/:email/wishlist', async (req, res) => {
   try {
     const { carId } = req.body;
     const user = await User.findOne({ email: req.params.email });
-    
+
     if (!user.wishlist.includes(carId)) {
       user.wishlist.push(carId);
       await user.save();
       await Car.findByIdAndUpdate(carId, { $inc: { wishlistCount: 1 } });
     }
-    
+
     res.json(user.wishlist);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -50,15 +50,15 @@ router.post('/:email/wishlist', async (req, res) => {
 router.delete('/:email/wishlist/:carId', async (req, res) => {
   try {
     const user = await User.findOne({ email: req.params.email });
-    
+
     const prevLength = user.wishlist.length;
     user.wishlist = user.wishlist.filter(id => id.toString() !== req.params.carId);
-    
+
     if (user.wishlist.length < prevLength) {
       await user.save();
       await Car.findByIdAndUpdate(req.params.carId, { $inc: { wishlistCount: -1 } });
     }
-    
+
     res.json(user.wishlist);
   } catch (err) {
     res.status(500).json({ error: err.message });

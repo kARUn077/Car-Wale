@@ -22,28 +22,17 @@ function NotFound() {
   return (
     <div className="detail-page">
       <Navbar />
-      <div className="not-found" style={{ padding: '140px 20px', textAlign: 'center' }}>
-        <div className="not-found-icon" style={{ fontSize: '72px', marginBottom: '24px' }}>😕</div>
-        <h2 style={{ fontSize: '32px', fontWeight: '900', color: 'var(--text-dark)', marginBottom: '12px' }}>
+      <div className="not-found">
+        <div className="not-found-icon">😕</div>
+        <h2>
           {text.title}
         </h2>
-        <p style={{ fontSize: '16px', color: 'var(--text-light)', marginBottom: '32px' }}>
+        <p>
           {text.sub}
         </p>
         <button 
+          className="not-found-btn"
           onClick={() => navigate('/buyer-home')}
-          style={{
-            padding: '14px 32px',
-            background: 'linear-gradient(135deg, var(--primary-color), var(--primary-hover))',
-            color: 'white',
-            border: 'none',
-            borderRadius: '50px',
-            fontSize: '16px',
-            fontWeight: '700',
-            cursor: 'pointer',
-            transition: 'all 0.3s ease',
-            boxShadow: '0 8px 24px rgba(224,48,18,0.3)'
-          }}
         >
           {text.cta}
         </button>

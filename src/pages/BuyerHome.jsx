@@ -13,9 +13,9 @@ const LEGACY_CITY_MAP = {
 
 const FUEL_COLORS = {
   Petrol: { bg: '#fff4e5', color: '#e07800', dot: '#f59e0b' },
-  Diesel:  { bg: '#eef2ff', color: '#3730a3', dot: '#6366f1' },
-  Electric:{ bg: '#ecfdf5', color: '#065f46', dot: '#10b981' },
-  Hybrid:  { bg: '#fdf4ff', color: '#6b21a8', dot: '#a855f7' },
+  Diesel: { bg: '#eef2ff', color: '#3730a3', dot: '#6366f1' },
+  Electric: { bg: '#ecfdf5', color: '#065f46', dot: '#10b981' },
+  Hybrid: { bg: '#fdf4ff', color: '#6b21a8', dot: '#a855f7' },
 }
 
 const QUICK_BUDGETS = [
@@ -159,7 +159,7 @@ function BuyerHome() {
         console.error('Failed to fetch wishlist:', err)
       }
     }
-    if (userEmail !== 'guest') fetchWishlist()
+    if (userEmail !== 'guest@carwale.com') fetchWishlist()
   }, [userEmail])
 
   const brands = useMemo(() => ['All', ...new Set(allCars.map(c => c.brand))], [allCars])
@@ -228,7 +228,7 @@ function BuyerHome() {
         (car.location || '').toLowerCase().includes(q)
 
       const brandMatch = selectedBrand === 'All' || car.brand === selectedBrand
-      const fuelMatch  = selectedFuel === 'All'  || car.fuel === selectedFuel
+      const fuelMatch = selectedFuel === 'All' || car.fuel === selectedFuel
       const transMatch = selectedTransmission === 'All' || car.transmission === selectedTransmission
       const locationMatch = !userLocation || userLocation === 'All India' || (car.location && car.location.toLowerCase() === userLocation.toLowerCase())
 
@@ -240,11 +240,11 @@ function BuyerHome() {
     })
 
     return [...cars].sort((a, b) => {
-      if (sortBy === 'price-asc')  return Number(a.price) - Number(b.price)
+      if (sortBy === 'price-asc') return Number(a.price) - Number(b.price)
       if (sortBy === 'price-desc') return Number(b.price) - Number(a.price)
-      if (sortBy === 'year-desc')  return Number(b.year)  - Number(a.year)
-      if (sortBy === 'year-asc')   return Number(a.year)  - Number(b.year)
-      if (sortBy === 'km-asc')     return Number(a.km)    - Number(b.km)
+      if (sortBy === 'year-desc') return Number(b.year) - Number(a.year)
+      if (sortBy === 'year-asc') return Number(a.year) - Number(b.year)
+      if (sortBy === 'km-asc') return Number(a.km) - Number(b.km)
       return 0
     })
   }, [allCars, searchText, selectedBrand, selectedFuel, selectedTransmission, minPrice, maxPrice, sortBy, userLocation])
@@ -275,7 +275,7 @@ function BuyerHome() {
         <div className="hero-background-overlay"></div>
         <div className="hero-content">
           <div className="hero-text-content">
-            <div className="hero-badge fade-in-up">🌟 India&apos;s Premier Auto Marketplace</div>
+            <div className="hero-badge fade-in-up">India&apos;s Premier Auto Marketplace</div>
             {userLanguage === 'Hindi' ? (
               <>
                 <h1 className="fade-in-up delay-1">{text.heroTitle} <span className="hero-accent">{text.heroAccent}</span> खोजें</h1>
@@ -292,7 +292,7 @@ function BuyerHome() {
           {/* Glassmorphic Search Container */}
           <div className="search-glass-container fade-in-up delay-3">
             <div className="search-bar">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"></span>
               <input
                 type="text"
                 placeholder={text.searchPlaceholder}
@@ -527,13 +527,13 @@ function BuyerHome() {
                   <table className="compare-table">
                     <tbody>
                       {[
-                        ['Price',        formatPrice(car.price)],
-                        ['Year',         car.year],
-                        ['Fuel',         car.fuel],
+                        ['Price', formatPrice(car.price)],
+                        ['Year', car.year],
+                        ['Fuel', car.fuel],
                         ['Transmission', car.transmission],
-                        ['KM Driven',    Number(car.km || 0).toLocaleString('en-IN') + ' km'],
-                        ['Location',     car.location || 'N/A'],
-                        ['Seller',       car.seller || 'N/A'],
+                        ['KM Driven', Number(car.km || 0).toLocaleString('en-IN') + ' km'],
+                        ['Location', car.location || 'N/A'],
+                        ['Seller', car.seller || 'N/A'],
                       ].map(([k, v]) => (
                         <tr key={k}>
                           <td className="compare-key">{k}</td>

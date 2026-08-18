@@ -4,6 +4,8 @@
   min-height: 100vh;
   background-color: var(--bg-color);
   padding-bottom: 40px;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .add-car-container {
@@ -69,6 +71,55 @@
   .form-row {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  .add-car-container {
+    padding: 0 16px;
+    margin-top: 24px;
+  }
+
+  .add-car-header {
+    padding: 28px 16px;
+  }
+
+  .add-car-header h2 {
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+  }
+
+  .add-car-form {
+    padding: 24px 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 479px) {
+  .add-car-container {
+    padding: 0 12px;
+  }
+
+  .add-car-header {
+    padding: 24px 12px;
+    border-radius: 12px 12px 0 0;
+  }
+
+  .add-car-form {
+    padding: 20px 12px;
+    border-radius: 0 0 12px 12px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 12px 14px;
+    font-size: 14px;
   }
 }
 

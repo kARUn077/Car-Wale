@@ -6,6 +6,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const carRoutes = require('./routes/cars');
 const userRoutes = require('./routes/user');
+const chatbotRoutes = require('./routes/chatbot');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/cars', carRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/chat', chatbotRoutes);
 
 async function connectMongo() {
   let lastError = null;

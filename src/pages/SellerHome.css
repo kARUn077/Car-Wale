@@ -4,6 +4,8 @@
   min-height: 100vh;
   background-color: var(--bg-color);
   padding-bottom: 60px;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .premium-dashboard-banner {
@@ -517,6 +519,11 @@
     grid-template-columns: 1fr;
   }
 
+  .listings-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
   .seller-car-card {
     flex-direction: column;
   }
@@ -537,6 +544,48 @@
     border-left: none;
     border-top: 1px solid var(--border-color);
     padding: 16px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 479px) {
+  .premium-dashboard-banner {
+    margin: 12px 12px 8px;
+    padding: 20px 16px;
+  }
+
+  .seller-stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .seller-listings,
+  .seller-insights {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .seller-card-actions {
+    flex-direction: column;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
+  }
+
+  .seller-card-title {
+    font-size: 1.25rem;
+  }
+
+  .empty-state {
+    padding: 48px 16px;
+  }
+
+  .empty-icon {
+    font-size: 48px;
   }
 }
 

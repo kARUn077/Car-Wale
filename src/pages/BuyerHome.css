@@ -8,6 +8,8 @@
   min-height: 100vh;
   background-color: var(--bg-color);
   font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 /* ──────────────────────────────────────────
@@ -15,10 +17,10 @@
 ────────────────────────────────────────── */
 .premium-hero {
   position: relative;
-  padding: 80px 30px 60px;
+  padding: clamp(40px, 8vw, 80px) clamp(16px, 4vw, 30px) clamp(32px, 6vw, 60px);
   background: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=2000') center/cover no-repeat;
   color: white;
-  border-radius: 0 0 40px 40px;
+  border-radius: 0 0 clamp(20px, 4vw, 40px) clamp(20px, 4vw, 40px);
   box-shadow: var(--shadow-lg);
   margin-bottom: -40px; /* pull up the next section slightly */
   z-index: 10;
@@ -63,11 +65,13 @@
 }
 
 .hero-text-content h1 {
-  font-size: 56px;
+  font-size: clamp(1.75rem, 4vw + 1rem, 3.5rem);
   font-weight: 900;
   line-height: 1.1;
   margin-bottom: 16px;
   text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-accent {
@@ -87,7 +91,7 @@
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 30px;
+  padding: clamp(16px, 4vw, 30px);
   border-radius: 24px;
   width: 100%;
   max-width: 800px;
@@ -277,10 +281,11 @@
   display: flex;
   align-items: flex-end;
   gap: 14px;
-  padding: 14px 30px;
+  padding: 14px clamp(16px, 4vw, 30px);
   flex-wrap: wrap;
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .filter-group {
@@ -343,9 +348,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 30px;
+  padding: 14px clamp(16px, 4vw, 30px);
   max-width: 1400px;
   margin: 0 auto;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .results-left {
@@ -417,9 +425,9 @@
 ────────────────────────────────────────── */
 .cars-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: 22px;
-  padding: 0 30px 60px;
+  padding: 0 clamp(16px, 4vw, 30px) 60px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -843,21 +851,229 @@
 /* ──────────────────────────────────────────
    RESPONSIVE
 ────────────────────────────────────────── */
-@media (max-width: 768px) {
-  .hero-section { padding: 40px 16px 28px; }
-  .hero-content h1 { font-size: 28px; }
-  .hero-stats { padding: 14px 16px; gap: 0; margin-top: 20px; }
-  .h-stat span { font-size: 18px; }
-  .filter-bar-inner { padding: 12px 16px; }
+
+/* Tablet: 768px–1023px */
+@media (max-width: 1023px) {
+  .filter-bar {
+    top: 60px;
+    padding-top: 40px;
+  }
+
+  .filter-bar-inner {
+    padding: 12px 20px;
+  }
+
+  .filter-group {
+    flex: 1 1 calc(33.333% - 10px);
+    min-width: 0;
+  }
+
   .filter-group select,
-  .filter-group input { min-width: 110px; }
-  .results-bar { padding: 12px 16px; }
-  .cars-grid { padding: 0 16px 40px; gap: 16px; }
-  .compare-grid { grid-template-columns: 1fr; }
+  .filter-group input[type="number"] {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .results-bar {
+    padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .results-right {
+    flex-wrap: wrap;
+  }
+
+  .cars-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 18px;
+  }
+
+  .compare-modal-header,
+  .compare-grid,
+  .compare-modal-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 
-@media (max-width: 480px) {
-  .search-bar { border-radius: 12px; padding: 8px; flex-wrap: wrap; }
-  .search-btn { width: 100%; border-radius: 8px; }
-  .hero-stats { display: none; }
+/* Mobile: 480px–767px */
+@media (max-width: 767px) {
+  .premium-hero {
+    margin-bottom: -24px;
+  }
+
+  .hero-text-content {
+    margin-bottom: 24px;
+  }
+
+  .hero-text-content p {
+    font-size: clamp(0.9rem, 2.5vw, 1.125rem);
+  }
+
+  .floating-stats {
+    flex-wrap: wrap;
+    padding: 16px;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .h-stat {
+    flex: 1 1 calc(50% - 6px);
+    min-width: 0;
+  }
+
+  .h-stat span {
+    font-size: clamp(1.125rem, 4vw, 1.75rem);
+  }
+
+  .h-stat-divider {
+    display: none;
+  }
+
+  .filter-bar {
+    padding-top: 32px;
+  }
+
+  .filter-bar-inner {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .filter-group {
+    flex: 1 1 calc(50% - 5px);
+  }
+
+  .reset-btn {
+    width: 100%;
+    align-self: stretch;
+    text-align: center;
+  }
+
+  .results-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 16px;
+  }
+
+  .results-right {
+    width: 100%;
+  }
+
+  .wishlist-link,
+  .compare-trigger-btn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .cars-grid {
+    grid-template-columns: 1fr;
+    padding: 0 16px 40px;
+    gap: 16px;
+  }
+
+  .card-title {
+    font-size: clamp(1rem, 4vw, 1.125rem);
+  }
+
+  .card-bottom {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .compare-grid {
+    grid-template-columns: 1fr;
+    padding: 16px 20px;
+  }
+
+  .compare-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .budget-chips {
+    gap: 8px;
+  }
+
+  .budget-chip {
+    font-size: 12px;
+    padding: 5px 12px;
+  }
+}
+
+/* Small mobile: 320px–479px */
+@media (max-width: 479px) {
+  .search-bar {
+    border-radius: 12px;
+    padding: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .search-bar input {
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 100%;
+    padding: 4px 0;
+  }
+
+  .search-btn {
+    width: 100%;
+    border-radius: 8px;
+    padding: 12px;
+  }
+
+  .floating-stats {
+    padding: 12px;
+  }
+
+  .h-stat {
+    flex: 1 1 100%;
+  }
+
+  .filter-group {
+    flex: 1 1 100%;
+  }
+
+  .results-count {
+    font-size: 18px;
+  }
+
+  .results-right {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .wishlist-link,
+  .compare-trigger-btn {
+    width: 100%;
+  }
+
+  .card-img-box {
+    height: clamp(160px, 45vw, 195px);
+  }
+
+  .compare-overlay {
+    padding: 12px;
+  }
+
+  .compare-modal {
+    border-radius: 14px;
+    max-height: 95vh;
+  }
+
+  .compare-modal-header,
+  .compare-grid,
+  .compare-modal-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .no-results {
+    padding: 48px 16px;
+  }
+
+  .no-results-icon {
+    font-size: 40px;
+  }
 }
