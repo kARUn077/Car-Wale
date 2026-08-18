@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/31183180/README.md)
 # CarWale
 
 A full-stack car marketplace web application built with React, Node.js,
