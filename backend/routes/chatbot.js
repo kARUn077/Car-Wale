@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
 
     // Use gemini-2.5-flash — fast, free tier supported
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.6-flash',
       systemInstruction: SYSTEM_PROMPT
     });
 
