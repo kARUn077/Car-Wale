@@ -9,7 +9,7 @@ import './CarDetail.css'
 function CarDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
-  
+
   const [activeImgIdx, setActiveImgIdx] = useState(0)
   const [showContactModal, setShowContactModal] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
@@ -84,7 +84,7 @@ function CarDetail() {
       viewBreakup: 'View Price Breakup',
       for5Years: 'For 5 Years',
       emiCalc: 'EMI Calculator',
-      offers: 'Get August Offers',
+      offers: 'Contact Seller',
       verifiedPartner: 'CarWale Verified Partner',
       buyingNew: 'Buying a New Car?',
       missedCall: 'Leave a missed call for expert guidance.',
@@ -170,13 +170,13 @@ function CarDetail() {
         if (res.ok) {
           const data = await res.json()
           setCar(data)
-          
+
           // Fetch all cars to get similar ones (mock logic)
           const allRes = await fetch(`${API_URL}/cars`)
           if (allRes.ok) {
             const allData = await allRes.json()
             const similar = allData.filter(c => c._id !== id && (c.brand === data.brand || c.fuel === data.fuel)).slice(0, 3)
-            setSimilarCars(similar.length > 0 ? similar : allData.filter(c => c._id !== id).slice(0,3))
+            setSimilarCars(similar.length > 0 ? similar : allData.filter(c => c._id !== id).slice(0, 3))
           }
         }
       } catch (err) {
@@ -202,7 +202,7 @@ function CarDetail() {
       <div>
         <Navbar />
         <div className="not-found">
-          <div className="not-found-icon">😕</div>
+          <div className="not-found-icon"></div>
           <h2>{text.notFound}</h2>
           <p>{text.notFoundSub}</p>
           <button onClick={() => navigate('/buyer-home')}>{text.explore}</button>
@@ -210,7 +210,7 @@ function CarDetail() {
       </div>
     )
   }
-  
+
   // Diverse car image pool — each car picks unique images based on its ID hash
   const carImagePool = [
     'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80', // red sports car side
@@ -269,9 +269,9 @@ function CarDetail() {
     setActiveTab(sectionId)
     const el = document.getElementById(sectionId)
     if (el) {
-      const yOffset = -100; 
+      const yOffset = -100;
       const y = el.getBoundingClientRect().top + window.scrollY + yOffset;
-      window.scrollTo({top: y, behavior: 'smooth'});
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
   }
 
@@ -286,16 +286,16 @@ function CarDetail() {
       </div>
 
       <div className="detail-layout">
-        
+
         {/* LEFT COLUMN - MAIN CONTENT */}
         <div className="detail-main">
-          
+
           {/* Header */}
           <div className="car-header">
             <h1 className="car-title">{car.brand} {car.model}</h1>
             <p className="car-subtitle">
               <span className="badge-expert">★ 4.8 {text.expertRating}</span>
-              <span className="loc-text">📍 {car.location || 'India'}</span>
+              <span className="loc-text"> {car.location || 'India'}</span>
             </p>
           </div>
 
@@ -320,16 +320,16 @@ function CarDetail() {
                 onError={(e) => { e.target.src = `https://placehold.co/800x500/1a1a2e/ffffff?text=${encodeURIComponent(car.brand + ' ' + car.model)}` }}
               />
               <div className="gallery-badges">
-                <span className="premium-badge fuel-badge">⛽ {car.fuel}</span>
-                <span className="premium-badge trans-badge">⚙️ {car.transmission}</span>
+                <span className="premium-badge fuel-badge"> {car.fuel}</span>
+                <span className="premium-badge trans-badge"> {car.transmission}</span>
               </div>
             </div>
-            
+
             <div className="thumbnail-list">
               {galleryImages.map((img, idx) => (
-                <img 
+                <img
                   key={idx}
-                  src={img} 
+                  src={img}
                   className={`thumbnail-img ${activeImgIdx === idx ? 'active' : ''}`}
                   onClick={() => setActiveImgIdx(idx)}
                   alt={`thumbnail-${idx}`}
@@ -343,17 +343,17 @@ function CarDetail() {
             <h2 className="section-title">{text.whyBuy} {car.brand} {car.model}?</h2>
             <div className="highlights-grid">
               <div className="highlight-card">
-                <div className="highlight-icon">🌟</div>
+                <div className="highlight-icon"></div>
                 <h4>{text.topSpec}</h4>
                 <p>{text.topSpecSub}</p>
               </div>
               <div className="highlight-card">
-                <div className="highlight-icon">🛡️</div>
+                <div className="highlight-icon"></div>
                 <h4>{text.safety}</h4>
                 <p>{text.safetySub}</p>
               </div>
               <div className="highlight-card">
-                <div className="highlight-icon">💎</div>
+                <div className="highlight-icon"></div>
                 <h4>{text.premium}</h4>
                 <p>{text.premiumSub}</p>
               </div>
@@ -401,7 +401,7 @@ function CarDetail() {
                 <div className="review-avg">
                   <span className="avg-number">{((car.reviews || []).reduce((sum, r) => sum + r.rating, 0) / (car.reviews || []).length).toFixed(1)}</span>
                   <div className="avg-stars">
-                    {[1,2,3,4,5].map(s => (
+                    {[1, 2, 3, 4, 5].map(s => (
                       <span key={s} className={`star ${s <= Math.round((car.reviews || []).reduce((sum, r) => sum + r.rating, 0) / (car.reviews || []).length) ? 'filled' : ''}`}>★</span>
                     ))}
                   </div>
@@ -414,7 +414,7 @@ function CarDetail() {
             <div className="write-review-box">
               <h3>{text.writeReview}</h3>
               <div className="star-picker">
-                {[1,2,3,4,5].map(s => (
+                {[1, 2, 3, 4, 5].map(s => (
                   <span
                     key={s}
                     className={`star-pick ${s <= (reviewHover || reviewRating) ? 'active' : ''}`}
@@ -502,7 +502,7 @@ function CarDetail() {
                         <span className="review-date">{formatReviewDate(rev.createdAt)}</span>
                       </div>
                       <div className="review-stars">
-                        {[1,2,3,4,5].map(s => (
+                        {[1, 2, 3, 4, 5].map(s => (
                           <span key={s} className={`star-sm ${s <= rev.rating ? 'filled' : ''}`}>★</span>
                         ))}
                       </div>
@@ -551,9 +551,9 @@ function CarDetail() {
             <h2 className="section-title">{text.similar}</h2>
             <div className="similar-cars-grid">
               {similarCars.map(sc => (
-                <div key={sc._id} className="similar-car-card" onClick={() => { navigate(`/car/${sc._id}`); window.scrollTo(0,0) }}>
-                  <img 
-                    src={sc.image || ''} 
+                <div key={sc._id} className="similar-car-card" onClick={() => { navigate(`/car/${sc._id}`); window.scrollTo(0, 0) }}>
+                  <img
+                    src={sc.image || ''}
                     alt={sc.model}
                     onError={(e) => { e.target.src = `https://placehold.co/400x220/1a1a2e/ffffff?text=${sc.brand}` }}
                   />
@@ -571,7 +571,7 @@ function CarDetail() {
 
         {/* RIGHT COLUMN - STICKY PRICING / ACTIONS */}
         <div className="detail-sidebar">
-          
+
           <div className="pricing-card">
             <p className="price-label">{car.brand} {car.model} {text.priceLabel}</p>
             <h2 className="huge-price">{formatPrice(car.price)}</h2>
@@ -588,7 +588,7 @@ function CarDetail() {
             <button className="primary-offer-btn" onClick={() => setShowContactModal(true)}>
               {text.offers}
             </button>
-            
+
             <div className="seller-card-mini">
               <div className="seller-avatar-mini">{car.seller ? car.seller.charAt(0).toUpperCase() : 'S'}</div>
               <div>
