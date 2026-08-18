@@ -3,7 +3,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const router = express.Router();
 
 // System prompt for car buying assistant
-const SYSTEM_PROMPT = `You are CarBot 🚗, an expert AI Car Buying Assistant for CarWale — India's trusted online car marketplace.
+const SYSTEM_PROMPT = `You are CarBot, an expert AI Car Buying Assistant for CarWale — India's trusted online car marketplace.
 
 Your role is to help users make smart, informed decisions about buying and selling cars.
 
@@ -73,7 +73,7 @@ router.post('/', async (req, res) => {
       return res.status(429).json({ error: 'API quota exceeded. Please try again later.' });
     }
 
-    f(
+    if (
       error.message?.includes('503') ||
       error.message?.includes('Service Unavailable') ||
       error.message?.includes('high demand')
