@@ -1,3 +1,4 @@
+import { API_URL } from '../api'
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { FiMessageCircle, FiX, FiSend, FiMinimize2 } from 'react-icons/fi';
@@ -87,7 +88,7 @@ const AiChatbot = () => {
         text: m.text
       }));
 
-      const response = await axios.post('http://localhost:5000/api/chat', {
+      const response = await axios.post(`${API_URL}/chat`, {
         message: text.trim(),
         history: history.slice(0, -1) // exclude the last user message (sent as message)
       });
