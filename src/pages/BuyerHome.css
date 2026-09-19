@@ -1,8 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-/* ═══════════════════════════════════════════
-   BUYER HOME — PREMIUM REDESIGN
-═══════════════════════════════════════════ */
+
 
 .buyer-page {
   min-height: 100vh;
@@ -12,9 +10,7 @@
   max-width: 100%;
 }
 
-/* ──────────────────────────────────────────
-   HERO SECTION
-────────────────────────────────────────── */
+
 .premium-hero {
   position: relative;
   padding: clamp(40px, 8vw, 80px) clamp(16px, 4vw, 30px) clamp(32px, 6vw, 60px);
@@ -22,7 +18,7 @@
   color: white;
   border-radius: 0 0 clamp(20px, 4vw, 40px) clamp(20px, 4vw, 40px);
   box-shadow: var(--shadow-lg);
-  margin-bottom: -40px; /* pull up the next section slightly */
+  margin-bottom: -40px; 
   z-index: 10;
 }
 
@@ -99,7 +95,6 @@
   box-shadow: 0 20px 40px rgba(0,0,0,0.3);
 }
 
-/* Search bar */
 .search-bar {
   display: flex;
   align-items: center;
@@ -263,9 +258,7 @@
   }
 }
 
-/* ──────────────────────────────────────────
-   FILTER BAR
-────────────────────────────────────────── */
+
 .filter-bar {
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
@@ -274,7 +267,7 @@
   position: sticky;
   top: 60px;
   z-index: 90;
-  padding-top: 50px; /* spacing for overlapping hero */
+  padding-top: 50px; 
 }
 
 .filter-bar-inner {
@@ -341,9 +334,7 @@
   color: white;
 }
 
-/* ──────────────────────────────────────────
-   RESULTS BAR
-────────────────────────────────────────── */
+
 .results-bar {
   display: flex;
   align-items: center;
@@ -420,9 +411,7 @@
   box-shadow: 0 4px 12px rgba(15,52,96,0.4);
 }
 
-/* ──────────────────────────────────────────
-   CAR GRID
-────────────────────────────────────────── */
+
 .cars-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
@@ -432,9 +421,7 @@
   margin: 0 auto;
 }
 
-/* ──────────────────────────────────────────
-   CAR CARD
-────────────────────────────────────────── */
+
 .car-card {
   background: var(--card-bg);
   border-radius: 12px;
@@ -514,7 +501,6 @@
   flex-shrink: 0;
 }
 
-/* Heart button */
 .heart-btn {
   position: absolute;
   top: 10px;
@@ -538,7 +524,6 @@
 .heart-btn:hover { transform: scale(1.2); }
 .heart-btn.wishlisted { background: #fff0f0; }
 
-/* Compare button */
 .compare-btn {
   position: absolute;
   bottom: 10px;
@@ -567,7 +552,6 @@
   border-color: #0f3460;
 }
 
-/* Card info */
 .card-info {
   padding: 16px 18px 18px;
 }
@@ -640,9 +624,7 @@
   color: white;
 }
 
-/* ──────────────────────────────────────────
-   NO RESULTS
-────────────────────────────────────────── */
+
 .no-results {
   grid-column: 1 / -1;
   text-align: center;
@@ -684,9 +666,7 @@
   box-shadow: 0 6px 20px rgba(224,48,18,0.4);
 }
 
-/* ──────────────────────────────────────────
-   COMPARE MODAL
-────────────────────────────────────────── */
+
 .compare-overlay {
   position: fixed;
   inset: 0;
@@ -848,9 +828,7 @@
 
 .clear-compare-btn:hover { background: #e4e6ea; }
 
-/* ──────────────────────────────────────────
-   RESPONSIVE
-────────────────────────────────────────── */
+
 
 /* Tablet: 768px–1023px */
 @media (max-width: 1023px) {

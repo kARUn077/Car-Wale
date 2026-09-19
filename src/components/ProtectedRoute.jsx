@@ -1,8 +1,8 @@
 import { Navigate } from 'react-router-dom'
 
 /**
- * Wraps a route and checks:
- * 1. Is user logged in? (userRole exists in localStorage)
+ * checks:
+ * 1. kya user logged in? (userRole exists in localStorage)
  * 2. Does their role match what this route needs? (if role is specified)
  * If not, redirect to login (or their correct home).
  */

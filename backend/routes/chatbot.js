@@ -2,7 +2,7 @@ const express = require('express');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const router = express.Router();
 
-// System prompt for car buying assistant
+// prompt for assistant
 const SYSTEM_PROMPT = `You are CarBot, an expert AI Car Buying Assistant for CarWale — India's trusted online car marketplace.
 
 Your role is to help users make smart, informed decisions about buying and selling cars.
@@ -23,7 +23,6 @@ Guidelines:
 
 You are an expert in the Indian car market. Be specific with Indian prices in INR (₹).`;
 
-// POST /api/chat - Handle chat messages
 router.post('/', async (req, res) => {
   try {
     const { message, history = [] } = req.body;
@@ -41,13 +40,11 @@ router.post('/', async (req, res) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Use gemini-3.6-flash — fast, free tier supported
     const model = genAI.getGenerativeModel({
       model: 'gemini-3.6-flash',
       systemInstruction: SYSTEM_PROMPT
     });
 
-    // Build chat history for multi-turn conversation
     const chatHistory = history.map(msg => ({
       role: msg.sender === 'user' ? 'user' : 'model',
       parts: [{ text: msg.text }]
@@ -90,7 +87,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET /api/chat/health - Health check
+// health check ke liye
 router.get('/health', (req, res) => {
   const apiKey = process.env.GOOGLE_AI_API_KEY;
   const configured = !!apiKey && apiKey !== 'your_google_ai_api_key_here';

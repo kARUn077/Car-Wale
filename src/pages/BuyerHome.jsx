@@ -29,7 +29,6 @@ function BuyerHome() {
   const navigate = useNavigate()
   const userEmail = localStorage.getItem('userEmail') || 'guest'
 
-  // ── Filter state ──────────────────────────────────────────
   const [searchText, setSearchText] = useState('')
   const [selectedBrand, setSelectedBrand] = useState('All')
   const [selectedFuel, setSelectedFuel] = useState('All')
@@ -39,19 +38,15 @@ function BuyerHome() {
   const [sortBy, setSortBy] = useState('default')
   const [activeBudget, setActiveBudget] = useState(null)
 
-  // ── Compare state ──────────────────────────────────────────
   const [compareIds, setCompareIds] = useState([])
   const [showCompare, setShowCompare] = useState(false)
 
-  // ── Toast ──────────────────────────────────────────────────
   const [toast, setToast] = useState(null)
 
-  // ── Wishlist state ─────────────────────────────────────────
   const [wishlistIds, setWishlistIds] = useState([])
 
   const [allCars, setAllCars] = useState([])
 
-  // ── User Preferences ───────────────────────────────────────
   const [userLocation, setUserLocation] = useState(() => {
     const stored = localStorage.getItem('userLocation') || DEFAULT_CITY
     return LEGACY_CITY_MAP[stored] || stored
@@ -166,7 +161,6 @@ function BuyerHome() {
   const fuels = ['All', 'Petrol', 'Diesel', 'Electric', 'Hybrid']
   const transmissions = ['All', 'Manual', 'Automatic']
 
-  // ── Wishlist toggle ────────────────────────────────────────
   async function toggleWishlist(e, carId) {
     e.stopPropagation()
     const id = String(carId)
@@ -189,7 +183,6 @@ function BuyerHome() {
     }
   }
 
-  // ── Compare toggle ─────────────────────────────────────────
   function toggleCompare(e, carId) {
     e.stopPropagation()
     const id = String(carId)
@@ -202,12 +195,11 @@ function BuyerHome() {
       }
       setCompareIds(prev => [...prev, id])
       if (compareIds.length === 1) {
-        setToast({ message: userLanguage === 'Hindi' ? '✅ 2 कारें चुनी गईं! देखने के लिए "तुलना" दबाएं।' : '✅ 2 cars selected! Click "Compare" to see.', type: 'success' })
+        setToast({ message: userLanguage === 'Hindi' ? '2 कारें चुनी गईं! देखने के लिए "तुलना" दबाएं।' : '2 cars selected! Click "Compare" to see.', type: 'success' })
       }
     }
   }
 
-  // ── Quick budget chips ─────────────────────────────────────
   function applyBudget(idx) {
     if (activeBudget === idx) {
       setActiveBudget(null); setMinPrice(''); setMaxPrice(''); return
@@ -218,7 +210,6 @@ function BuyerHome() {
     setMaxPrice(b.max ? String(b.max) : '')
   }
 
-  // ── Filtering & sorting ────────────────────────────────────
   const filteredCars = useMemo(() => {
     let cars = allCars.filter(car => {
       const q = searchText.toLowerCase()
@@ -249,7 +240,6 @@ function BuyerHome() {
     })
   }, [allCars, searchText, selectedBrand, selectedFuel, selectedTransmission, minPrice, maxPrice, sortBy, userLocation])
 
-  // ── Helpers ────────────────────────────────────────────────
   function formatPrice(price) {
     if (price >= 100000) return '₹' + (price / 100000).toFixed(1) + ' Lakh'
     return '₹' + Number(price).toLocaleString('en-IN')
@@ -261,7 +251,6 @@ function BuyerHome() {
     setSortBy('default'); setActiveBudget(null)
   }
 
-  // ── Compare cars data ──────────────────────────────────────
   const compareCars = allCars.filter(c => compareIds.includes(String(c._id)))
 
   return (
@@ -270,7 +259,6 @@ function BuyerHome() {
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      {/* ═══════════════ PREMIUM HERO ═══════════════ */}
       <div className="hero-section premium-hero">
         <div className="hero-background-overlay"></div>
         <div className="hero-content">
@@ -289,7 +277,6 @@ function BuyerHome() {
             )}
           </div>
 
-          {/* Glassmorphic Search Container */}
           <div className="search-glass-container fade-in-up delay-3">
             <div className="search-bar">
               <span className="search-icon"></span>
@@ -305,7 +292,6 @@ function BuyerHome() {
               <button className="search-btn">{text.findCars}</button>
             </div>
 
-            {/* Quick budget chips */}
             <div className="budget-chips">
               <span className="budget-label">{text.popularBudget}</span>
               {QUICK_BUDGETS.map((b, i) => (
@@ -321,7 +307,6 @@ function BuyerHome() {
           </div>
         </div>
 
-        {/* Floating Hero Stats */}
         <div className="hero-stats floating-stats fade-in-up delay-4">
           <div className="h-stat"><span>{allCars.length}+</span><p>{userLanguage === 'Hindi' ? 'कारें लिस्टेड' : 'Cars Listed'}</p></div>
           <div className="h-stat-divider" />
@@ -333,7 +318,6 @@ function BuyerHome() {
         </div>
       </div>
 
-      {/* ═══════════════ FILTERS ═══════════════ */}
       <div className="filter-bar">
         <div className="filter-bar-inner">
           <div className="filter-group">
@@ -391,7 +375,6 @@ function BuyerHome() {
         </div>
       </div>
 
-      {/* ═══════════════ RESULTS BAR ═══════════════ */}
       <div className="results-bar">
         <div className="results-left">
           <span className="results-count">{filteredCars.length}</span>
@@ -414,7 +397,6 @@ function BuyerHome() {
         </div>
       </div>
 
-      {/* ═══════════════ CAR GRID ═══════════════ */}
       <div className="cars-grid">
         {filteredCars.length === 0 ? (
           <div className="no-results">
@@ -505,7 +487,6 @@ function BuyerHome() {
         )}
       </div>
 
-      {/* ═══════════════ COMPARE MODAL ═══════════════ */}
       {showCompare && compareCars.length === 2 && (
         <div className="compare-overlay" onClick={() => setShowCompare(false)}>
           <div className="compare-modal" onClick={e => e.stopPropagation()}>

@@ -217,7 +217,6 @@ function SellerEditCar() {
 
         <form className="add-car-form" onSubmit={handleSubmit}>
           {errors.server && <div className="error" style={{marginBottom: '1rem'}}>⚠ {errors.server}</div>}
-          {/* Brand + Model */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.brand} <span className="required">*</span></label>
@@ -231,7 +230,6 @@ function SellerEditCar() {
             </div>
           </div>
 
-          {/* Year + KM */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.year} <span className="required">*</span></label>
@@ -266,7 +264,6 @@ function SellerEditCar() {
             </div>
           </div>
 
-          {/* Price + Location */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.price} <span className="required">*</span></label>
@@ -280,7 +277,6 @@ function SellerEditCar() {
             </div>
           </div>
 
-          {/* Seller details */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.sellerName} <span className="required">*</span></label>
@@ -294,7 +290,6 @@ function SellerEditCar() {
             </div>
           </div>
 
-          {/* Image Upload */}
           <div className="form-group">
             <label>{text.uploadImage}</label>
             <input type="file" accept="image/*" onChange={handleFileChange} className="file-input" />
@@ -305,7 +300,6 @@ function SellerEditCar() {
             )}
           </div>
 
-          {/* Buttons */}
           <div className="form-actions">
             <button type="button" className="cancel-btn" onClick={() => navigate('/seller-home')}>{text.cancel}</button>
             <button type="submit" className="submit-btn">{text.save}</button>

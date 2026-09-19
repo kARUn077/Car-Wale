@@ -115,10 +115,8 @@ function SellerHome() {
     return () => window.removeEventListener('preferencesChanged', handlePrefsChange)
   }, [])
 
-  // Toast state
   const [toast, setToast] = useState(null)
 
-  // Load only THIS seller's cars
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
@@ -138,7 +136,7 @@ function SellerHome() {
   }, [sellerEmail]);
 
 
-  //
+  
   const totalValue = useMemo(() => {
     return cars.reduce((sum, car) => sum + Number(car.price || 0), 0);
   }, [cars]);
@@ -165,11 +163,9 @@ function SellerHome() {
   }, [cars.length, averagePrice, highestPrice]);
 
 
-  // Show toast if navigated here with a success message
   useEffect(() => {
     if (location.state?.toast) {
       setToast({ message: location.state.toast, type: 'success' })
-      // Clear the state
       window.history.replaceState({}, document.title)
     }
   }, [location.state])
@@ -206,7 +202,6 @@ function SellerHome() {
     <div className="seller-page">
       <Navbar />
 
-      {/* Toast */}
       {toast && (
         <Toast
           message={toast.message}
@@ -347,7 +342,7 @@ function SellerHome() {
 
                 <div className="seller-card-footer">
                   <div>
-                    <p className="seller-card-meta">📍 {car.location || text.na}</p>
+                    <p className="seller-card-meta"> {car.location || text.na}</p>
                     {car.phone && <p className="seller-card-meta">📞 {car.phone}</p>}
                   </div>
                   <p className="seller-card-price">{formatPrice(Number(car.price))}</p>
@@ -359,7 +354,7 @@ function SellerHome() {
                   className="edit-btn"
                   onClick={() => navigate(`/seller-edit-car/${car._id}`)}
                 >
-                  ✏️ {text.edit}
+                   {text.edit}
                 </button>
                 <button
                   className="delete-btn"

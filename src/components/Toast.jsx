@@ -1,14 +1,7 @@
 import { useEffect } from 'react'
 import './Toast.css'
 
-/**
- * Toast notification component
- * Props:
- *   message  — string to display
- *   type     — 'success' | 'error' | 'info'
- *   onClose  — callback when toast closes
- *   duration — ms before auto-close (default 3000)
- */
+
 function Toast({ message, type = 'success', onClose, duration = 3000 }) {
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -20,7 +13,7 @@ function Toast({ message, type = 'success', onClose, duration = 3000 }) {
   const icons = {
     success: '✅',
     error: '❌',
-    info: 'ℹ️',
+    info: 'ℹ',
   }
 
   return (

@@ -14,12 +14,12 @@ function Profile() {
 
   const text = getText({
     English: {
-      saveOk: '✅ Profile saved successfully!',
+      saveOk: 'Profile saved successfully!',
       saveFail: 'Failed to save profile',
       fillPasswords: 'Please fill both password fields.',
       passMin: 'New password must be at least 6 characters.',
       wrongCurrent: 'Current password is incorrect.',
-      passChanged: '✅ Password changed successfully!',
+      passChanged: 'Password changed successfully!',
       serverErr: 'Server error.',
       user: 'User',
       sellerAccount: 'Seller Account',
@@ -54,7 +54,7 @@ function Profile() {
       seller: ' Seller',
       buyer: ' Buyer',
       emailVerified: 'Email Verified',
-      verified: '✅ Verified',
+      verified: 'Verified',
       location: 'Location',
       notSet: 'Not set',
       fullNamePh: 'Enter your full name',
@@ -64,12 +64,12 @@ function Profile() {
       newPassPh: 'Enter new password'
     },
     Hindi: {
-      saveOk: '✅ प्रोफाइल सफलतापूर्वक सेव हो गई!',
+      saveOk: 'प्रोफाइल सफलतापूर्वक सेव हो गई!',
       saveFail: 'प्रोफाइल सेव नहीं हो सकी',
       fillPasswords: 'कृपया दोनों पासवर्ड फील्ड भरें।',
       passMin: 'नया पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।',
       wrongCurrent: 'वर्तमान पासवर्ड गलत है।',
-      passChanged: '✅ पासवर्ड सफलतापूर्वक बदल दिया गया!',
+      passChanged: 'पासवर्ड सफलतापूर्वक बदल दिया गया!',
       serverErr: 'सर्वर त्रुटि।',
       user: 'यूजर',
       sellerAccount: 'विक्रेता अकाउंट',
@@ -123,7 +123,6 @@ function Profile() {
   const [toast, setToast] = useState(null)
   const [activeSection, setActiveSection] = useState('personal')
 
-  // Stats
   const [myCars, setMyCars] = useState([])
   const [wishlistCount, setWishlistCount] = useState(0)
 
@@ -236,7 +235,6 @@ function Profile() {
 
       <div className="profile-layout">
 
-        {/* LEFT SIDEBAR */}
         <aside className="profile-sidebar">
           <div className="sidebar-header">
             <div className="profile-avatar-lg">
@@ -273,10 +271,8 @@ function Profile() {
           </div>
         </aside>
 
-        {/* RIGHT CONTENT */}
         <main className="profile-main">
 
-          {/* Stats Banner */}
           <div className="stats-banner">
             {role === 'seller' ? (
               <>
@@ -311,7 +307,6 @@ function Profile() {
             )}
           </div>
 
-          {/* Personal Info Section */}
           {activeSection === 'personal' && (
             <div className="content-card fade-in">
               <div className="card-header">
@@ -343,7 +338,6 @@ function Profile() {
             </div>
           )}
 
-          {/* Security Section */}
           {activeSection === 'security' && (
             <div className="content-card fade-in">
               <div className="card-header">
@@ -366,7 +360,6 @@ function Profile() {
             </div>
           )}
 
-          {/* Dashboard Section */}
           {activeSection === 'stats' && (
             <div className="content-card fade-in">
               <div className="card-header">

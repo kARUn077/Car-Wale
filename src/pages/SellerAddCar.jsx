@@ -176,7 +176,6 @@ function SellerAddCar() {
 
         <form className="add-car-form" onSubmit={handleSubmit}>
           {errors.server && <div className="error" style={{marginBottom: '1rem'}}>⚠ {errors.server}</div>}
-          {/* Brand + Model */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.brand} <span className="required">*</span></label>
@@ -200,7 +199,6 @@ function SellerAddCar() {
             </div>
           </div>
 
-          {/* Year + KM */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.year} <span className="required">*</span></label>
@@ -228,7 +226,6 @@ function SellerAddCar() {
             </div>
           </div>
 
-          {/* Fuel + Transmission */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.fuel}</label>
@@ -248,7 +245,6 @@ function SellerAddCar() {
             </div>
           </div>
 
-          {/* Price + Location */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.price} <span className="required">*</span></label>
@@ -273,7 +269,6 @@ function SellerAddCar() {
             </div>
           </div>
 
-          {/* Seller Name + Phone */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.yourName} <span className="required">*</span></label>
@@ -299,7 +294,6 @@ function SellerAddCar() {
             </div>
           </div>
 
-          {/* Image */}
           <div className="form-row">
             <div className="form-group">
               <label>{text.uploadImage}</label>
@@ -316,7 +310,6 @@ function SellerAddCar() {
             </div>
           </div>
 
-          {/* Image Preview */}
           {preview && (
             <div className="form-group">
               <label>{text.preview}</label>
@@ -330,7 +323,6 @@ function SellerAddCar() {
             </div>
           )}
 
-          {/* Buttons */}
           <div className="form-actions">
             <button type="submit" className="submit-btn">{text.submit}</button>
             <button type="button" className="cancel-btn" onClick={() => navigate('/seller-home')}>{text.cancel}</button>

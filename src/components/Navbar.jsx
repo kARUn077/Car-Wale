@@ -45,7 +45,6 @@ function Navbar() {
   const { isDark, toggleTheme } = useTheme()
   const [availableCities, setAvailableCities] = useState([])
   
-  // Location & Language State
   const [locationName, setLocationName] = useState(() => {
     const stored = localStorage.getItem('userLocation') || DEFAULT_CITY
     return LEGACY_CITY_MAP[stored] || stored
@@ -73,7 +72,6 @@ function Navbar() {
           .filter(Boolean)
         setAvailableCities(locations)
       } catch (err) {
-        // Silent fail; city dropdown will still show default option.
       }
     }
 
@@ -126,7 +124,6 @@ function Navbar() {
     return location.pathname === path
   }
 
-  // Get initials for avatar
   function getInitials(fullName) {
     if (!fullName || fullName === 'User') return '?'
     const parts = fullName.trim().split(' ')

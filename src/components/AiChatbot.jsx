@@ -5,7 +5,6 @@ import { FiMessageCircle, FiX, FiSend, FiMinimize2 } from 'react-icons/fi';
 import { BsRobot } from 'react-icons/bs';
 import './AiChatbot.css';
 
-// Simple markdown-to-HTML renderer (no external lib needed)
 const renderMarkdown = (text) => {
   if (!text) return '';
   return text
@@ -82,7 +81,6 @@ const AiChatbot = () => {
     setLoading(true);
 
     try {
-      // Send conversation history for multi-turn context
       const history = updatedMessages.slice(1).map(m => ({
         sender: m.sender,
         text: m.text
@@ -90,7 +88,7 @@ const AiChatbot = () => {
 
       const response = await axios.post(`${API_URL}/chat`, {
         message: text.trim(),
-        history: history.slice(0, -1) // exclude the last user message (sent as message)
+        history: history.slice(0, -1) 
       });
 
       const botMessage = {
@@ -106,7 +104,7 @@ const AiChatbot = () => {
       const errText = error.response?.data?.error || "Sorry, server se connect nahi ho pa raha. Backend chalaa ke dekho.";
       const errorMessage = {
         id: Date.now() + 1,
-        text: `❌ ${errText}`,
+        text: ` ${errText}`,
         sender: 'bot',
         timestamp: new Date()
       };
@@ -139,7 +137,7 @@ const AiChatbot = () => {
 
   return (
     <div className="ai-chatbot">
-      {/* Floating Chat Button */}
+      {/* Chat Button */}
       <button
         className={`chat-trigger-btn ${isOpen ? 'active' : ''}`}
         onClick={() => { setIsOpen(!isOpen); setIsMinimized(false); }}

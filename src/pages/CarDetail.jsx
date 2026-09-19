@@ -18,14 +18,12 @@ function CarDetail() {
   const [similarCars, setSimilarCars] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Review state
   const [reviewRating, setReviewRating] = useState(0)
   const [reviewHover, setReviewHover] = useState(0)
   const [reviewComment, setReviewComment] = useState('')
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const [toast, setToast] = useState(null)
 
-  // FAQ state
   const [openFaq, setOpenFaq] = useState(null)
 
   const userName = localStorage.getItem('userName') || 'Guest User'
@@ -71,7 +69,7 @@ function CarDetail() {
       excellent: 'Excellent',
       selectRating: 'Select rating',
       shareExp: 'Share your experience with this car...',
-      reviewOk: '✅ Review submitted successfully!',
+      reviewOk: 'Review submitted successfully!',
       reviewFail: 'Failed to submit review',
       networkErr: 'Network error. Please try again.',
       submitting: 'Submitting...',
@@ -136,7 +134,7 @@ function CarDetail() {
       excellent: 'उत्कृष्ट',
       selectRating: 'रेटिंग चुनें',
       shareExp: 'इस कार के साथ अपना अनुभव साझा करें...',
-      reviewOk: '✅ रिव्यू सफलतापूर्वक सबमिट हो गया!',
+      reviewOk: 'रिव्यू सफलतापूर्वक सबमिट हो गया!',
       reviewFail: 'रिव्यू सबमिट नहीं हो सका',
       networkErr: 'नेटवर्क त्रुटि। कृपया फिर से प्रयास करें।',
       submitting: 'सबमिट हो रहा है...',
@@ -171,7 +169,7 @@ function CarDetail() {
           const data = await res.json()
           setCar(data)
 
-          // Fetch all cars to get similar ones (mock logic)
+          // Fetch all cars to get similar
           const allRes = await fetch(`${API_URL}/cars`)
           if (allRes.ok) {
             const allData = await allRes.json()
@@ -211,7 +209,6 @@ function CarDetail() {
     )
   }
 
-  // Diverse car image pool — each car picks unique images based on its ID hash
   const carImagePool = [
     'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80', // red sports car side
     'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80', // porsche front
@@ -287,10 +284,8 @@ function CarDetail() {
 
       <div className="detail-layout">
 
-        {/* LEFT COLUMN - MAIN CONTENT */}
         <div className="detail-main">
 
-          {/* Header */}
           <div className="car-header">
             <h1 className="car-title">{car.brand} {car.model}</h1>
             <p className="car-subtitle">
@@ -299,7 +294,6 @@ function CarDetail() {
             </p>
           </div>
 
-          {/* Sticky Tab Nav */}
           <div className="detail-tabs">
             <button className={`tab-btn ${activeTab === 'overview' ? 'active' : ''}`} onClick={() => scrollToSection('overview')}>{text.overview}</button>
             <button className={`tab-btn ${activeTab === 'highlights' ? 'active' : ''}`} onClick={() => scrollToSection('highlights')}>{text.highlights}</button>
@@ -309,7 +303,6 @@ function CarDetail() {
             <button className={`tab-btn ${activeTab === 'similar' ? 'active' : ''}`} onClick={() => scrollToSection('similar')}>{text.similarCars}</button>
           </div>
 
-          {/* Image Gallery */}
           <div id="overview" className="gallery-section">
             <div className="main-image-wrapper">
               <img
@@ -338,7 +331,6 @@ function CarDetail() {
             </div>
           </div>
 
-          {/* Why Buy / Highlights */}
           <div id="highlights" className="section-block">
             <h2 className="section-title">{text.whyBuy} {car.brand} {car.model}?</h2>
             <div className="highlights-grid">
@@ -360,7 +352,6 @@ function CarDetail() {
             </div>
           </div>
 
-          {/* Extended Specifications */}
           <div id="specs" className="section-block">
             <h2 className="section-title">{text.keySpecs}</h2>
             <div className="specs-list">
@@ -391,11 +382,9 @@ function CarDetail() {
             </div>
           </div>
 
-          {/* ═══════ REVIEWS SECTION ═══════ */}
           <div id="reviews" className="section-block">
             <h2 className="section-title">{text.userReviews}</h2>
 
-            {/* Average Rating Summary */}
             {(car.reviews || []).length > 0 && (
               <div className="review-summary">
                 <div className="review-avg">
@@ -410,7 +399,6 @@ function CarDetail() {
               </div>
             )}
 
-            {/* Write a Review Form */}
             <div className="write-review-box">
               <h3>{text.writeReview}</h3>
               <div className="star-picker">
@@ -457,7 +445,7 @@ function CarDetail() {
                       setReviewComment('')
                       setToast({ message: text.reviewOk, type: 'success' })
                     } else if (res.status === 404) {
-                      // Fallback for deployments where /:id/reviews route is unavailable.
+                      // jab :id/reviews route is unavailable.
                       const updatedReviews = [...(car.reviews || []), reviewPayload]
                       const fallbackRes = await fetch(`${API_URL}/cars/${id}`, {
                         method: 'PUT',
@@ -488,7 +476,6 @@ function CarDetail() {
               </button>
             </div>
 
-            {/* Review List */}
             <div className="reviews-list">
               {(car.reviews || []).length === 0 ? (
                 <p className="no-reviews">{text.noReviews}</p>
@@ -514,7 +501,6 @@ function CarDetail() {
             </div>
           </div>
 
-          {/* ═══════ FAQs SECTION ═══════ */}
           <div id="faqs" className="section-block">
             <h2 className="section-title">{text.faqAbout} {car.brand} {car.model}</h2>
             <div className="faq-list">
@@ -569,7 +555,6 @@ function CarDetail() {
 
         </div>
 
-        {/* RIGHT COLUMN - STICKY PRICING / ACTIONS */}
         <div className="detail-sidebar">
 
           <div className="pricing-card">
@@ -598,7 +583,6 @@ function CarDetail() {
             </div>
           </div>
 
-          {/* Promo Card */}
           <div className="promo-banner">
             <div className="promo-content">
               <h4>{text.buyingNew}</h4>
@@ -614,13 +598,12 @@ function CarDetail() {
 
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
-      {/* Modern Contact Modal */}
       {showContactModal && (
         <div className="modal-overlay fade-in" onClick={() => setShowContactModal(false)}>
           <div className="modal-content scale-up" onClick={e => e.stopPropagation()}>
             <button className="close-modal" onClick={() => setShowContactModal(false)}>✕</button>
             <div className="modal-header">
-              <div className="modal-icon">📞</div>
+              <div className="modal-icon"></div>
               <h3>{text.sellerContact}</h3>
               <p>{text.negotiate}</p>
             </div>

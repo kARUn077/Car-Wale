@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useUserLanguage, getText } from '../utils/language'
-import './CarDetail.css'; // Reusing the not-found styles from CarDetail
+import './CarDetail.css'; 
 
 function NotFound() {
   const navigate = useNavigate();
