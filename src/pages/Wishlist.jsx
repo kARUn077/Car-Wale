@@ -147,11 +147,11 @@ function Wishlist() {
                 <div className="wl-card-body" onClick={() => navigate(`/car/${car._id}`)}>
                   <h3>{car.brand} {car.model}</h3>
                   <div className="wl-specs">
-                    <span>📅 {car.year}</span>
-                    <span>🛣️ {Number(car.km || 0).toLocaleString('en-IN')} km</span>
-                    <span>⚙️ {car.transmission}</span>
+                    <span> {car.year}</span>
+                    <span> {Number(car.km || 0).toLocaleString('en-IN')} km</span>
+                    <span> {car.transmission}</span>
                   </div>
-                  <p className="wl-location">📍 {car.location || 'India'}</p>
+                  <p className="wl-location"> {car.location || 'India'}</p>
                   <div className="wl-card-footer">
                     <span className="wl-price">{formatPrice(car.price)}</span>
                     <button className="wl-view-btn" onClick={(e) => { e.stopPropagation(); navigate(`/car/${car._id}`) }}>

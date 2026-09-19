@@ -126,4 +126,4 @@ If you have issues:
 3. Make sure both backend and frontend are running
 4. Clear browser cache and refresh (Ctrl+Shift+Delete)
 
-Happy Coding! 🚗✨
+Happy Coding! ✨

@@ -37,6 +37,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   try {
     const updatedCar = await Car.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedCar) return res.status(404).json({ error: 'Car not found' });
     res.json(updatedCar);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -46,7 +47,8 @@ router.put('/:id', async (req, res) => {
 // Delete a car
 router.delete('/:id', async (req, res) => {
   try {
-    await Car.findByIdAndDelete(req.params.id);
+    const deleted = await Car.findByIdAndDelete(req.params.id);
+    if (!deleted) return res.status(404).json({ error: 'Car not found' });
     res.json({ message: 'Car deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });

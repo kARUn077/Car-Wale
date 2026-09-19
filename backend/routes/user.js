@@ -20,7 +20,7 @@ router.put('/:email', async (req, res) => {
     const updatedUser = await User.findOneAndUpdate(
       { email: req.params.email },
       req.body,
-      { returnDocument: 'after' }
+      { new: true }
     );
     res.json(updatedUser);
   } catch (err) {
@@ -33,6 +33,8 @@ router.post('/:email/wishlist', async (req, res) => {
   try {
     const { carId } = req.body;
     const user = await User.findOne({ email: req.params.email });
+
+    if (!user) return res.status(404).json({ error: 'User not found' });
 
     if (!user.wishlist.includes(carId)) {
       user.wishlist.push(carId);

@@ -13,7 +13,7 @@ function SellerAddCar() {
 
   const text = getText({
     English: {
-      header: '📋 Add a Car Listing',
+      header: ' Add a Car Listing',
       sub: 'Fill in the details below to list your car for sale.',
       brandReq: 'Brand is required',
       modelReq: 'Model is required',
@@ -24,7 +24,7 @@ function SellerAddCar() {
       listedOk: 'Car listed successfully! 🎉',
       addFail: 'Failed to add car',
       serverErr: 'Server error. Make sure backend is running.',
-      submit: '🚗 Add Car Listing',
+      submit: ' Add Car Listing',
       cancel: 'Cancel',
       brand: 'Brand',
       model: 'Model',
@@ -49,7 +49,7 @@ function SellerAddCar() {
       phonePh: '10-digit mobile number'
     },
     Hindi: {
-      header: '📋 कार लिस्टिंग जोड़ें',
+      header: ' कार लिस्टिंग जोड़ें',
       sub: 'अपनी कार बेचने के लिए नीचे दी गई जानकारी भरें।',
       brandReq: 'ब्रांड आवश्यक है',
       modelReq: 'मॉडल आवश्यक है',
@@ -60,7 +60,7 @@ function SellerAddCar() {
       listedOk: 'कार सफलतापूर्वक लिस्ट हो गई! 🎉',
       addFail: 'कार जोड़ने में विफल',
       serverErr: 'सर्वर त्रुटि। सुनिश्चित करें कि बैकएंड चल रहा है।',
-      submit: '🚗 कार लिस्टिंग जोड़ें',
+      submit: ' कार लिस्टिंग जोड़ें',
       cancel: 'रद्द करें',
       brand: 'ब्रांड',
       model: 'मॉडल',

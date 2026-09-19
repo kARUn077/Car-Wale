@@ -23,7 +23,7 @@ function Signup() {
       passMin: 'Password must be at least 6 characters.',
       signupFailed: 'Signup failed',
       serverError: 'Server error. Make sure backend is running.',
-      title: 'Create Account 🚀',
+      title: 'Create Account ',
       subtitle: "Join as a Buyer or Seller - it's free!",
       heroTitle: 'Start Your Journey With Us',
       heroSub: 'Create your free account and get access to thousands of verified car listings across India.',
@@ -49,7 +49,7 @@ function Signup() {
       passMin: 'पासवर्ड कम से कम 6 अक्षरों का होना चाहिए।',
       signupFailed: 'साइनअप विफल हुआ',
       serverError: 'सर्वर त्रुटि। सुनिश्चित करें कि बैकएंड चल रहा है।',
-      title: 'अकाउंट बनाएं 🚀',
+      title: 'अकाउंट बनाएं ',
       subtitle: 'खरीदार या विक्रेता के रूप में जुड़ें - यह मुफ्त है!',
       heroTitle: 'हमारे साथ अपनी यात्रा शुरू करें',
       heroSub: 'मुफ्त अकाउंट बनाएं और भारत भर की हजारों सत्यापित कार लिस्टिंग तक पहुंच पाएं।',
@@ -154,7 +154,7 @@ function Signup() {
             </button>
           </div>
 
-          {error && <div className="error-msg"><span>⚠️</span> {error}</div>}
+          {error && <div className="error-msg"><span></span> {error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">

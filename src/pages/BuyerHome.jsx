@@ -182,7 +182,7 @@ function BuyerHome() {
           body: JSON.stringify({ carId: id })
         })
         setWishlistIds(prev => [...prev, id])
-        setToast({ message: userLanguage === 'Hindi' ? '❤️ विशलिस्ट में जोड़ दिया गया!' : '❤️ Added to wishlist!', type: 'success' })
+        setToast({ message: userLanguage === 'Hindi' ? 'विशलिस्ट में जोड़ दिया गया!' : 'Added to wishlist!', type: 'success' })
       }
     } catch (err) {
       setToast({ message: userLanguage === 'Hindi' ? 'विशलिस्ट अपडेट नहीं हो सकी' : 'Failed to update wishlist', type: 'error' })
@@ -408,7 +408,7 @@ function BuyerHome() {
           )}
           {wishlistIds.length > 0 && (
             <button className="wishlist-link" onClick={() => navigate('/wishlist')}>
-              ❤️ {text.wishlist} ({wishlistIds.length})
+               {text.wishlist} ({wishlistIds.length})
             </button>
           )}
         </div>
@@ -480,14 +480,14 @@ function BuyerHome() {
                   <h3 className="card-title">{car.brand} {car.model}</h3>
 
                   <div className="card-specs">
-                    <span className="spec-item">📅 {car.year}</span>
+                    <span className="spec-item"> {car.year}</span>
                     <span className="spec-divider">·</span>
-                    <span className="spec-item">🛣️ {Number(car.km || 0).toLocaleString('en-IN')} km</span>
+                    <span className="spec-item"> {Number(car.km || 0).toLocaleString('en-IN')} km</span>
                     <span className="spec-divider">·</span>
-                    <span className="spec-item">⚙️ {car.transmission}</span>
+                    <span className="spec-item"> {car.transmission}</span>
                   </div>
 
-                  <p className="card-location">📍 {car.location || 'N/A'}</p>
+                  <p className="card-location"> {car.location || 'N/A'}</p>
 
                   <div className="card-bottom">
                     <span className="card-price">{formatPrice(car.price)}</span>

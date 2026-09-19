@@ -23,7 +23,7 @@ function NotFound() {
     <div className="detail-page">
       <Navbar />
       <div className="not-found">
-        <div className="not-found-icon">😕</div>
+        <div className="not-found-icon"></div>
         <h2>
           {text.title}
         </h2>

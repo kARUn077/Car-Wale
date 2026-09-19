@@ -221,7 +221,7 @@ function SellerHome() {
         <div className="banner-overlay"></div>
         <div className="banner-content">
           <div className="banner-left">
-            <div className="greeting-badge">✨ {text.dashboard}</div>
+            <div className="greeting-badge"> {text.dashboard}</div>
             <h1>
               {greeting},
               <span className="seller-name-accent"> {sellerName}</span>
@@ -312,7 +312,7 @@ function SellerHome() {
 
         {cars.length === 0 ? (
           <div className="empty-state">
-            <div className="empty-icon">🚗</div>
+            <div className="empty-icon"></div>
             <p>{text.emptyTitle}</p>
             <button className="add-car-btn" onClick={() => navigate('/seller-add-car')}>
               + {text.emptyCta}
@@ -322,10 +322,10 @@ function SellerHome() {
           cars.map(car => (
             <div key={car._id} className="seller-car-card">
               <img
-                src={car.image || 'https://via.placeholder.com/200x140?text=No+Image'}
+                src={car.image || 'https://placehold.co/200x140/1a1a2e/ffffff?text=No+Image'}
                 alt={`${car.brand} ${car.model}`}
                 className="seller-card-img"
-                onError={(e) => { e.target.src = 'https://via.placeholder.com/200x140?text=No+Image' }}
+                onError={(e) => { e.target.src = 'https://placehold.co/200x140/1a1a2e/ffffff?text=No+Image' }}
               />
 
               <div className="seller-card-info">

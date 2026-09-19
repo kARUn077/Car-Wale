@@ -41,9 +41,9 @@ router.post('/', async (req, res) => {
 
     const genAI = new GoogleGenerativeAI(apiKey);
 
-    // Use gemini-2.5-flash — fast, free tier supported
+    // Use gemini-1.5-flash — fast, free tier supported
     const model = genAI.getGenerativeModel({
-      model: 'gemini-3.6-flash',
+      model: 'gemini-1.5-flash',
       systemInstruction: SYSTEM_PROMPT
     });
 

@@ -31,7 +31,7 @@ function Footer() {
       email: 'support@carwale.com',
       phone: '+91 1800-XXX-XXXX',
       rights: 'All rights reserved.',
-      madeIn: 'Made with ❤️ in India'
+      madeIn: 'Made with in India'
     },
     Hindi: {
       tagline: 'भारत का विश्वसनीय मार्केटप्लेस — पुरानी कारें आसानी से खरीदें और बेचें।',
@@ -56,7 +56,7 @@ function Footer() {
       email: 'support@carwale.com',
       phone: '+91 1800-XXX-XXXX',
       rights: 'सर्वाधिकार सुरक्षित।',
-      madeIn: 'भारत में ❤️ से बनाया गया'
+      madeIn: 'भारत में से बनाया गया'
     }
   }, userLanguage)
 

@@ -25,12 +25,12 @@ const renderMarkdown = (text) => {
 };
 
 const QUICK_SUGGESTIONS = [
-  '🚗 Used car kharidne ke tips?',
-  '💰 Budget ₹5-10L mein best car?',
-  '⚡ Petrol vs Electric car?',
-  '📋 RC transfer kaise kare?',
-  '🔧 Car inspection checklist',
-  '💳 Car loan tips',
+  ' Used car kharidne ke tips?',
+  ' Budget ₹5-10L mein best car?',
+  ' Petrol vs Electric car?',
+  ' RC transfer kaise kare?',
+  ' Car inspection checklist',
+  ' Car loan tips',
 ];
 
 const AiChatbot = () => {
@@ -39,7 +39,7 @@ const AiChatbot = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: 'Namaste! 🙏 Main **CarBot** hoon — aapka personal Car Buying Assistant!\n\nCar kharidne ya bechne mein koi bhi sawaal poochho, main help karunga. 🚗',
+      text: 'Namaste!  Main **CarBot** hoon — aapka personal Car Buying Assistant!\n\nCar kharidne ya bechne mein koi bhi sawaal poochho, main help karunga. ',
       sender: 'bot',
       timestamp: new Date()
     }
@@ -130,7 +130,7 @@ const AiChatbot = () => {
   const clearChat = () => {
     setMessages([{
       id: 1,
-      text: 'Namaste! 🙏 Main **CarBot** hoon — aapka personal Car Buying Assistant!\n\nCar kharidne ya bechne mein koi bhi sawaal poochho, main help karunga. 🚗',
+      text: 'Namaste!  Main **CarBot** hoon — aapka personal Car Buying Assistant!\n\nCar kharidne ya bechne mein koi bhi sawaal poochho, main help karunga. ',
       sender: 'bot',
       timestamp: new Date()
     }]);
@@ -264,7 +264,7 @@ const AiChatbot = () => {
                     ref={inputRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     placeholder="Car ke baare mein kuch bhi poochho..."
                     disabled={loading}
                     rows="1"

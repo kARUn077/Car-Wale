@@ -19,7 +19,7 @@ function Login() {
       fillFields: 'Please fill in all fields.',
       loginFailed: 'Login failed',
       serverError: 'Server error. Make sure backend is running.',
-      title: 'Welcome Back! 👋',
+      title: 'Welcome Back! ',
       subtitle: 'Login to your account to continue',
       heroTitle: 'Find Your Dream Car Today',
       heroSub: "Join thousands of buyers and sellers on India's most trusted auto marketplace.",
@@ -41,7 +41,7 @@ function Login() {
       fillFields: 'कृपया सभी फील्ड भरें।',
       loginFailed: 'लॉगिन विफल हुआ',
       serverError: 'सर्वर त्रुटि। सुनिश्चित करें कि बैकएंड चल रहा है।',
-      title: 'वापसी पर स्वागत है! 👋',
+      title: 'वापसी पर स्वागत है! ',
       subtitle: 'जारी रखने के लिए अपने अकाउंट में लॉगिन करें',
       heroTitle: 'आज ही अपनी पसंदीदा कार खोजें',
       heroSub: 'भारत के भरोसेमंद ऑटो मार्केटप्लेस पर हजारों खरीदार और विक्रेता जुड़ चुके हैं।',
@@ -143,7 +143,7 @@ function Login() {
             </button>
           </div>
 
-          {error && <div className="error-msg"><span>⚠️</span> {error}</div>}
+          {error && <div className="error-msg"><span></span> {error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
